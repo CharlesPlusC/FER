@@ -8,8 +8,6 @@ PathOut = r'C:/Users/chazzers/Desktop/DAiSEE/DataSet/Frames/'
 # Specify the file you want the frames to be stored in
 PathIn = r'C:/Users/chazzers/Desktop/DAiSEE/DataSet/Videos/'
 
-
-
 video_paths = []
 
 for folder in os.listdir(PathIn):
