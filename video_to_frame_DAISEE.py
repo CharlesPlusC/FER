@@ -20,7 +20,7 @@ required_frame_rate = 5
 # Making a blank array that will be populated with the full paths of all videos
 video_paths = []
 
-# Finding the name of all the video paths in the provided file structure
+# Finding the name of all the video paths in the provided file structure and adding to array video_paths
 
 for folder in os.listdir(PathIn):
     folder = PathIn + folder
