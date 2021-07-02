@@ -78,12 +78,13 @@ for i in range(0, 10, 1):
         height, width, layers = img.shape
         size = (width, height)
         img_array.append(img)
-
     # Pass them through deepface
     face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)
-
+    img_array = []
     data = face_FER
+    print(data)
     # Turning arrays into pandas dataframes and labelling emotions
+
     emotions = set()
     # First we need to find out all unique emotions
     for key, value in data.items():
@@ -103,13 +104,6 @@ for i in range(0, 10, 1):
 
     df = pd.DataFrame(rows, columns=columns)
     df.set_index('instance', inplace=True)
-
-    # exporting to tab-delimited CSV
-    df.to_csv(DataFramesOut, sep='\t')
-
-
-
-
-
+    dfs.append(df)
 
 
