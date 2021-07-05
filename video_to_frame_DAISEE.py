@@ -86,7 +86,6 @@ for i in range(2, 10, 1):
     face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)
     img_array = []
     data = face_FER
-    print(data)
     # Turning arrays into pandas dataframes and labelling emotions
 
     emotions = set()
@@ -96,7 +95,7 @@ for i in range(2, 10, 1):
             emotions.add(emotion)
 
     rows = []
-    columns = ['instance'] + list(emotions)
+    columns = ['vid%d'%i+ 'instance'] + list(emotions)
 
     for key, value in data.items():
         rows.append([0] * len(columns))  # Start creating a new row with zeros
@@ -107,7 +106,7 @@ for i in range(2, 10, 1):
             rows[-1][columns.index(emotion)] = emotion_value  # place the emotion in the correct index
 
     df = pd.DataFrame(rows, columns=columns)
-    df.set_index('instance', inplace=True)
+    df.set_index('vid%d'%i+ 'instance', inplace=True)
     dfs.append(df)
 
 # ----------------------------------------------------------------------------#
@@ -137,16 +136,23 @@ for df in dfs:
 
 # Making a dataframe that compares all the videos to eachother (no longer computing intra-video stats but inter-video)
 
-inter_video_df = []  # empty array to add inter_video analysis data
-inter_video_df = pd.DataFrame()  # turning it into a dataframe
-
+valence_per_vid = []  # empty array to add inter-video analysis data
+variance_per_vid = []
+total_vid_variance = []
 # list of median of positive emotions for each video
 for df in dfs:
-    # list of median of pos,neg and neutral emotions for each video (one value for each video)
-    inter_video_df.append(float(df['neg_valence_avg'].median()))
-    inter_video_df.append(df['pos_valence_avg'].median())
-    inter_video_df.append(df['neutral_avg'].median())
+    # list of median of pos,neg and neutral emotions for each video (one value for each video), and length of video
+        for participant in df:
+            valence_values = [(df['neg_valence_avg'].median()), df['pos_valence_avg'].median(),
+                              df['neutral_avg'].median(),len(df)]
+        variance_per_vid.append(df.iloc[:, 0:7].var()) #variance for each emotion in a video
+        # append these values to lists of lists
+        valence_per_vid.append(valence_values)
 
-    # length of each video
-    inter_video_df.append(len(df))
+# turning list of lists into a dataframe
+video_valence_df = pd.DataFrame(valence_per_vid, columns = ["neg_avg_vid","pos_avg_vid","neutral_avg_vid","vid_len"])
+video_variance_df = pd.DataFrame(variance_per_vid)
 
+total_vid_variance_df = video_variance_df[['happy','sad','angry','fear','disgust','surprise']].mean(axis=1)#average variance of all emotions in any video (except neutral)
+
+print(total_vid_variance_df)
