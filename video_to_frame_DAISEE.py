@@ -23,7 +23,7 @@ def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COL
  for filename in os.listdir(PathOut):
      if filename.endswith('.jpg'):
          print("Are you sure? The videos seem to have already been split.")
-         break  
+         break   
  else:
  # do stuff if a file .true doesn't exist.
   for folder in os.listdir(PathIn):
