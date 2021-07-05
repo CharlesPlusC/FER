@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="006b0620-5d65-465f-bb66-1d0a49702d16" name="Default Changelist" comment="added video number to index of deepface output. made one big DF with variance, valence and length">
+      <change beforePath="$PROJECT_DIR$/video_to_frame_DAISEE.py" beforeDir="false" afterPath="$PROJECT_DIR$/video_to_frame_DAISEE.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="master" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="CharlesPlusC" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="FER" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/CharlesPlusC/FER.git" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ulUWQo1xl0YpAXLNrNyc4vhb6K" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/video_to_frame_DAISEE.py" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Confirmation" />
+  </component>
+  <component name="ReadonlyStatusHandler">
+    <option name="SHOW_DIALOG" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration name="video_to_frame_DAISEE" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="FER" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\chazzers\anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/video_to_frame_DAISEE.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="006b0620-5d65-465f-bb66-1d0a49702d16" name="Default Changelist" comment="" />
+      <created>1625239700992</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1625239700992</updated>
+      <workItem from="1625239703804" duration="86000" />
+      <workItem from="1625239828830" duration="1248000" />
+      <workItem from="1625245619943" duration="239000" />
+      <workItem from="1625391500484" duration="93000" />
+      <workItem from="1625473824446" duration="1093000" />
+      <workItem from="1625474962479" duration="13104000" />
+    </task>
+    <task id="LOCAL-00001" summary="getting valence, rolling avg and starting inter-video stats">
+      <created>1625240644595</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1625240644595</updated>
+    </task>
+    <task id="LOCAL-00002" summary="creating dataframes containing valence per video, variance per emotion per video, total variance per video">
+      <created>1625481366391</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1625481366392</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added video number to index of deepface output. made one big DF with variance, valence and length">
+      <created>1625489923973</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1625489923974</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="getting valence, rolling avg and starting inter-video stats" />
+    <MESSAGE value="creating dataframes containing valence per video, variance per emotion per video, total variance per video" />
+    <MESSAGE value="added video number to index of deepface output. made one big DF with variance, valence and length" />
+    <option name="LAST_COMMIT_MESSAGE" value="added video number to index of deepface output. made one big DF with variance, valence and length" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="586" y="198" key="#Inspections" timestamp="1625476085028">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="586" y="198" key="#Inspections/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625476085028" />
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1625240074204">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625240074204" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1625240069941">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625240069940" />
+    <state x="758" y="387" key="Github.CreatePullRequestDialog" timestamp="1625240724383">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="758" y="387" key="Github.CreatePullRequestDialog/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625240724383" />
+    <state width="1877" height="312" key="GridCell.Tab.0.bottom" timestamp="1625505911062">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="312" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625505911062" />
+    <state width="1877" height="312" key="GridCell.Tab.0.center" timestamp="1625505911062">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="312" key="GridCell.Tab.0.center/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625505911062" />
+    <state width="1877" height="312" key="GridCell.Tab.0.left" timestamp="1625505911062">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="312" key="GridCell.Tab.0.left/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625505911062" />
+    <state width="1877" height="312" key="GridCell.Tab.0.right" timestamp="1625505911062">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="312" key="GridCell.Tab.0.right/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625505911062" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1625492197696">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625492197696" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1625492197695">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625492197695" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1625492197695">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625492197695" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1625492197696">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625492197696" />
+    <state x="515" y="235" key="SettingsEditor" timestamp="1625492349362">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="515" y="235" key="SettingsEditor/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625492349362" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1625489925609">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625489925609" />
+    <state x="599" y="249" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1625240712931">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="599" y="249" key="com.intellij.dvcs.ui.CompareBranchesDialog/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625240712931" />
+    <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1625505904877">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625505904877" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1625479018469">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.-329.1080.1880@0.0.1920.1040" timestamp="1625479018469" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FER$video_to_frame_DAISEE.coverage" NAME="video_to_frame_DAISEE Coverage Results" MODIFIED="1625492209959" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
