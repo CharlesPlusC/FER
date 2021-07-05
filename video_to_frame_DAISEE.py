@@ -12,6 +12,7 @@ from deepface import DeepFace
 
 def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/',required_frame_rate = 2 ):
 
+
  # The frame rate that the film is recorded at -> Dependent on camera (usually 30)
  video_frame_rate = 30
 
@@ -19,8 +20,13 @@ def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COL
  video_paths = []
 
  # # Finding the name of all the video paths in the provided file structure
-
- for folder in os.listdir(PathIn):
+ for filename in os.listdir(PathOut):
+     if filename.endswith('.jpg'):
+         print("Are you sure? The videos seem to have already been split.")
+         break
+ else:
+ # do stuff if a file .true doesn't exist.
+  for folder in os.listdir(PathIn):
     folder = PathIn + "/" + folder
 
     for vid in os.listdir(folder):
@@ -31,31 +37,32 @@ def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COL
         video_paths.append(video)
 
  # using OpenCV to split all the videos specified into their component frames
- vid_count = 1
+  vid_count = 1
 
- for i in video_paths:
-     cap = cv2.VideoCapture(i)
-     vid_count+=1
-     success = True
-     frame_count = 1 #reset frame count to 1 at the start of every new video
-     while success:
-         success, image = cap.read()
-         print('read a new frame:',success)
-         if frame_count %(video_frame_rate*required_frame_rate) == 0:
-             cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
-         frame_count += 1
+  for i in video_paths:
+         cap = cv2.VideoCapture(i)
+         vid_count+=1
+         success = True
+         frame_count = 1 #reset frame count to 1 at the start of every new video
+         while success:
+             success, image = cap.read()
+             print('read a new frame:',success)
+             if frame_count %(video_frame_rate*required_frame_rate) == 0:
+                 cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
+             frame_count += 1
 
 print(Split_v2f())
 
 
-# ----------------------------------------------------------------------------#
-# PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#
+# ----------------------------------------------------------------------------
+#PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES
 
 # making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface
 video_counter = 1
 array_counter = 1
 img_array = []
 dfs = []
+
 
 # takes all the photos that contain the number of 'video_counter' and puts them through deepface
 for i in range(0, len(video_paths), 1):
