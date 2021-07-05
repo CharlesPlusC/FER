@@ -11,57 +11,52 @@ from deepface import DeepFace
 # ----------------------------------------------------------------------------#
 # SPLITTING VIDEOS INTO FRAMES#
 
-# Specify the file you want the frames to be stored in
-PathOut = r'C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/Frames/'
-# TODO: change the name of the pathout once we want to run the full thing
+def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/',required_frame_rate = 2 ):
 
-# TODO: Add an ifloop that sees if the PathOut is populated and doesnt run the splitting if it is
-
-# Specify the file the videos are stored in
-PathIn = r'C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/Videos/'
-# changed path to D: instead of C: to test things
-# TODO: change this to correct path when we want to process all the videos
-
-# The frame rate that the film is recorded at -> Dependent on camera (usually 30)
-video_frame_rate = 30
-
-# The frame rate we want (i.e. "I want a frame every x seconds")
-required_frame_rate = 2
+ # The frame rate that the film is recorded at -> Dependent on camera (usually 30)
+ video_frame_rate = 30
 
 # Making a blank array that will be populated with the full paths of all videos
 video_paths = []
 
-# # Finding the name of all the video paths in the provided file structure
+ # # Finding the name of all the video paths in the provided file structure
+ for filename in os.listdir(PathOut):
+     if filename.endswith('.jpg'):
+         print("Are you sure? The videos seem to have already been split.")
+         break   
+ else:
+ # do stuff if a file .true doesn't exist.
+  for folder in os.listdir(PathIn):
+    folder = PathIn + "/" + folder
 
-# for folder in os.listdir(PathIn):
-#     folder = PathIn + folder
+    for vid in os.listdir(folder):
+        vid = folder + "/" + vid
 
-#     for vid in os.listdir(folder):
-#         vid = folder + "/" + vid
+        for video in os.listdir(vid):
+            video = vid + "/" + video
+        video_paths.append(video)
 
-#         for video in os.listdir(vid):
-#             video = vid + "/" + video
-#         video_paths.append(video)
+ # using OpenCV to split all the videos specified into their component frames
+  vid_count = 1
 
-# # using OpenCV to split all the videos specified into their component frames
-# vid_count = 1
+  for i in video_paths:
+         cap = cv2.VideoCapture(i)
+         vid_count+=1
+         success = True
+         frame_count = 1 #reset frame count to 1 at the start of every new video
+         while success:
+             success, image = cap.read()
+             print('read a new frame:',success)
+             if frame_count %(video_frame_rate*required_frame_rate) == 0:
+                 cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
+             frame_count += 1
 
-# for i in video_paths:
-#     cap = cv2.VideoCapture(i)
-#     vid_count+=1
-#     success = True
-#     frame_count = 1 #reset frame count to 1 at the start of every new video
-#     while success:
-#         success, image = cap.read()
-#         print('read a new frame:',success)
-#         if frame_count %(video_frame_rate*required_frame_rate) == 0:
-#             cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
-#         frame_count += 1
-
-# # TODO: make this code not end with an error
+print(Split_v2f())
+# TODO: make this code not end with an error
 
 
-# # ----------------------------------------------------------------------------#
+
+# ----------------------------------------------------------------------------#
 # PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#
 
 # making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface
@@ -76,7 +71,6 @@ dfs = []
 # for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter starting at 1?
 for i in range(2, 10, 1):
     for filename in glob.glob(PathOut + 'video%d' % i + 'frame*.jpg'):
-        print(filename)
         # Read in the relevant images
         img = cv2.imread(filename)
         height, width, layers = img.shape
