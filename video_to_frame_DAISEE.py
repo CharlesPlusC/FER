@@ -9,49 +9,51 @@ from deepface import DeepFace
 # TODO: make all of these into functions
 
 # ----------------------------------------------------------------------------#
-# SPLITTING VIDEOS INTO FRAMES#
+# SPLITTING VIDEOS INTO FRAMES
 
-def Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/',required_frame_rate = 2 ):
 
- # The frame rate that the film is recorded at -> Dependent on camera (usually 30)
- video_frame_rate = 30
+def split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/', required_frame_rate = 2 ):
 
-# Making a blank array that will be populated with the full paths of all videos
-video_paths = []
+    # The frame rate that the film is recorded at -> Dependent on camera (usually 30)
 
- # # Finding the name of all the video paths in the provided file structure
- for filename in os.listdir(PathOut):
-     if filename.endswith('.jpg'):
-         print("Are you sure? The videos seem to have already been split.")
-         break   
- else:
- # do stuff if a file .true doesn't exist.
-  for folder in os.listdir(PathIn):
-    folder = PathIn + "/" + folder
+    video_frame_rate = 30
 
-    for vid in os.listdir(folder):
-        vid = folder + "/" + vid
+    # Making a blank array that will be populated with the full paths of all videos
+    video_paths = []
 
-        for video in os.listdir(vid):
-            video = vid + "/" + video
-        video_paths.append(video)
+     # # Finding the name of all the video paths in the provided file structure
+    for filename in os.listdir(PathOut):
+           if filename.endswith('.jpg'):
+               print("Are you sure? The videos seem to have already been split.")
+               break
+    else:
+    # do stuff if a file .true doesn't exist.
+        for folder in os.listdir(PathIn):
+            folder = PathIn + "/" + folder
 
- # using OpenCV to split all the videos specified into their component frames
-  vid_count = 1
+            for vid in os.listdir(folder):
+             vid = folder + "/" + vid
 
-  for i in video_paths:
-         cap = cv2.VideoCapture(i)
-         vid_count+=1
-         success = True
-         frame_count = 1 #reset frame count to 1 at the start of every new video
-         while success:
-             success, image = cap.read()
-             print('read a new frame:',success)
-             if frame_count %(video_frame_rate*required_frame_rate) == 0:
-                 cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
-             frame_count += 1
+            for video in os.listdir(vid):
+                video = vid + "/" + video
+            video_paths.append(video)
 
-print(Split_v2f())
+        # using OpenCV to split all the videos specified into their component frames
+        vid_count = 1
+
+        for i in video_paths:
+                cap = cv2.VideoCapture(i)
+                vid_count+=1
+                success = True
+                frame_count = 1 #reset frame count to 1 at the start of every new video
+                while success:
+                    success, image = cap.read()
+                    print('read a new frame:',success)
+                    if frame_count %(video_frame_rate*required_frame_rate) == 0:
+                        cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
+                    frame_count += 1
+
+print(split_v2f())
 # TODO: make this code not end with an error
 
 
