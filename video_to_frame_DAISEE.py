@@ -54,56 +54,68 @@ def split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COL
                     frame_count += 1
 
 print(split_v2f())
-# TODO: make this code not end with an error
+TODO: make this code not end with an error
 
 
+----------------------------------------------------------------------------#
+PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#
 
-# ----------------------------------------------------------------------------#
-# PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#
+def make_deep(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/'):
+    # making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface
 
-# making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface
-video_counter = 1
-array_counter = 1
-img_array = []
-dfs = []
-
-# takes all the photos that contain the number of 'video_counter' and puts them through deepface
-# TODO: doing 10 videos for now but fix this so that it does len(all videos)
-
-# for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter starting at 1?
-for i in range(2, 10, 1):
-    for filename in glob.glob(PathOut + 'video%d' % i + 'frame*.jpg'):
-        # Read in the relevant images
-        img = cv2.imread(filename)
-        height, width, layers = img.shape
-        size = (width, height)
-        img_array.append(img)
-    # Pass them through deepface
-    face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)
+    video_counter = 1
+    array_counter = 1
+    total_video_paths = []
     img_array = []
-    data = face_FER
-    # Turning arrays into pandas dataframes and labelling emotions
+    dfs = []
+    for folder in os.listdir(PathIn):
+        folder = PathIn + "/" + folder
 
-    emotions = set()
-    # First we need to find out all unique emotions
-    for key, value in data.items():
-        for emotion in value['emotion'].keys():
-            emotions.add(emotion)
+        for vid in os.listdir(folder):
+            vid = folder + "/" + vid
 
-    rows = []
-    columns = ['vid%d' % i + 'instance'] + list(emotions)
+        for video in os.listdir(vid):
+            video = vid + "/" + video
+        total_video_paths.append(video)
 
-    for key, value in data.items():
-        rows.append([0] * len(columns))  # Start creating a new row with zeros
+    # takes all the photos that contain the number of 'video_counter' and puts them through deepface
+    # TODO: doing 10 videos for now but fix this so that it does len(all videos)
 
-        key = key.split('_')[1]  # Get the 1,2,3 out of the instance
-        rows[-1][0] = key
-        for emotion, emotion_value in value['emotion'].items():
-            rows[-1][columns.index(emotion)] = emotion_value  # place the emotion in the correct index
+    # for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter starting at 1?
+    for i in range(2, len(total_video_paths), 1):
+        for filename in glob.glob(PathOut + 'video%d' % i + 'frame*.jpg'):
+            # Read in the relevant images
+            img = cv2.imread(filename)
+            height, width, layers = img.shape
+            size = (width, height)
+            img_array.append(img)
+        # Pass them through deepface
+        face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)
+        img_array = []
+        data = face_FER
+        # Turning arrays into pandas dataframes and labelling emotions
 
-    df = pd.DataFrame(rows, columns=columns)
-    df.set_index('vid%d' % i + 'instance', inplace=True)
-    dfs.append(df)
+        emotions = set()
+        # First we need to find out all unique emotions
+        for key, value in data.items():
+            for emotion in value['emotion'].keys():
+                emotions.add(emotion)
+
+        rows = []
+        columns = ['vid%d' % i + 'instance'] + list(emotions)
+
+        for key, value in data.items():
+            rows.append([0] * len(columns))  # Start creating a new row with zeros
+
+            key = key.split('_')[1]  # Get the 1,2,3 out of the instance
+            rows[-1][0] = key
+            for emotion, emotion_value in value['emotion'].items():
+                rows[-1][columns.index(emotion)] = emotion_value  # place the emotion in the correct index
+
+        df = pd.DataFrame(rows, columns=columns)
+        df.set_index('vid%d' % i + 'instance', inplace=True)
+        dfs.append(df)
+        return (dfs)
 
 # ----------------------------------------------------------------------------#
 # TREATING THE DATA IN THE DATAFRAMES TO GET "ENGAGEMENT"
