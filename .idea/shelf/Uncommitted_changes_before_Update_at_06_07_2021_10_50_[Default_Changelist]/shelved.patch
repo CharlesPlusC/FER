@@ -1,0 +1,59 @@
+Index: video_to_frame_DAISEE.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># importing dependencies\r\nimport os\r\nimport glob\r\nimport cv2\r\nimport numpy as np\r\nimport pandas as pd\r\nfrom deepface import DeepFace\r\n\r\n# TODO: make all of these into functions\r\n\r\n# ----------------------------------------------------------------------------#\r\n# SPLITTING VIDEOS INTO FRAMES#\r\n\r\ndef Split_v2f(PathIn = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Videos/', PathOut = r'C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/Dataset/Frames/',required_frame_rate = 2 ):\r\n\r\n # The frame rate that the film is recorded at -> Dependent on camera (usually 30)\r\n video_frame_rate = 30\r\n\r\n# Making a blank array that will be populated with the full paths of all videos\r\nvideo_paths = []\r\n\r\n # # Finding the name of all the video paths in the provided file structure\r\n for filename in os.listdir(PathOut):\r\n     if filename.endswith('.jpg'):\r\n         print(\"Are you sure? The videos seem to have already been split.\")\r\n         break   \r\n else:\r\n # do stuff if a file .true doesn't exist.\r\n  for folder in os.listdir(PathIn):\r\n    folder = PathIn + \"/\" + folder\r\n\r\n    for vid in os.listdir(folder):\r\n        vid = folder + \"/\" + vid\r\n\r\n        for video in os.listdir(vid):\r\n            video = vid + \"/\" + video\r\n        video_paths.append(video)\r\n\r\n # using OpenCV to split all the videos specified into their component frames\r\n  vid_count = 1\r\n\r\n  for i in video_paths:\r\n         cap = cv2.VideoCapture(i)\r\n         vid_count+=1\r\n         success = True\r\n         frame_count = 1 #reset frame count to 1 at the start of every new video\r\n         while success:\r\n             success, image = cap.read()\r\n             print('read a new frame:',success)\r\n             if frame_count %(video_frame_rate*required_frame_rate) == 0:\r\n                 cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)\r\n             frame_count += 1\r\n\r\nprint(Split_v2f())\r\n# TODO: make this code not end with an error\r\n\r\n\r\n\r\n# ----------------------------------------------------------------------------#\r\n# PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#\r\n\r\n# making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface\r\nvideo_counter = 1\r\narray_counter = 1\r\nimg_array = []\r\ndfs = []\r\n\r\n# takes all the photos that contain the number of 'video_counter' and puts them through deepface\r\n# TODO: doing 10 videos for now but fix this so that it does len(all videos)\r\n\r\n# for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter starting at 1?\r\nfor i in range(2, 10, 1):\r\n    for filename in glob.glob(PathOut + 'video%d' % i + 'frame*.jpg'):\r\n        # Read in the relevant images\r\n        img = cv2.imread(filename)\r\n        height, width, layers = img.shape\r\n        size = (width, height)\r\n        img_array.append(img)\r\n    # Pass them through deepface\r\n    face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)\r\n    img_array = []\r\n    data = face_FER\r\n    # Turning arrays into pandas dataframes and labelling emotions\r\n\r\n    emotions = set()\r\n    # First we need to find out all unique emotions\r\n    for key, value in data.items():\r\n        for emotion in value['emotion'].keys():\r\n            emotions.add(emotion)\r\n\r\n    rows = []\r\n    columns = ['vid%d' % i + 'instance'] + list(emotions)\r\n\r\n    for key, value in data.items():\r\n        rows.append([0] * len(columns))  # Start creating a new row with zeros\r\n\r\n        key = key.split('_')[1]  # Get the 1,2,3 out of the instance\r\n        rows[-1][0] = key\r\n        for emotion, emotion_value in value['emotion'].items():\r\n            rows[-1][columns.index(emotion)] = emotion_value  # place the emotion in the correct index\r\n\r\n    df = pd.DataFrame(rows, columns=columns)\r\n    df.set_index('vid%d' % i + 'instance', inplace=True)\r\n    dfs.append(df)\r\n\r\n# ----------------------------------------------------------------------------#\r\n# TREATING THE DATA IN THE DATAFRAMES TO GET \"ENGAGEMENT\"\r\n\r\n# TODO: currently applying to all frames; make it so that we can split frames belonging to different individuals\r\n\r\n# Getting averages and rolling averages of positive-valence, negative-valence, and neutral emotions\r\nfor df in dfs:\r\n\r\n    # average of negative and positive valence emotions, and neutral\r\n    df['neg_valence_avg'] = np.mean(df[['fear', 'disgust', 'angry', 'sad']], axis=1)\r\n    df['pos_valence_avg'] = np.mean(df[['happy', 'surprise']], axis=1)\r\n    df['neutral_avg'] = np.mean(df[['neutral']], axis=1)\r\n\r\n    # Taking a rolling average of these (length of the rolling average = 2% the length of the dataframe(or 2 frames whichever is biggest))\r\n    while int(len(df) * 0.02) > 1:\r\n        three_percent_len = int(len(df) * 0.02)\r\n    else:\r\n        three_percent_len = 1\r\n\r\n    df['neg_valence_avg_roll'] = df['neg_valence_avg'].rolling(window=three_percent_len).mean()\r\n    df['pos_valence_avg_roll'] = df['pos_valence_avg'].rolling(window=three_percent_len).mean()\r\n    df['neutral_avg_roll'] = df['neutral_avg'].rolling(window=three_percent_len).mean()\r\n\r\n    # TODO: if we want to add graphs of emotion vs. time this is the place to do it\r\n\r\n# Making a dataframe that compares all the videos to eachother (no longer computing intra-video stats but inter-video)\r\n\r\nvalence_per_vid = []  # empty array to add inter-video analysis data\r\nvariance_per_vid = []\r\ntotal_vid_variance = []\r\n# list of median of positive emotions for each video\r\nfor df in dfs:\r\n    # list of median of pos,neg and neutral emotions for each video (one value for each video), and length of video\r\n    for participant in df:\r\n        valence_values = [(df['neg_valence_avg'].median()), df['pos_valence_avg'].median(),\r\n                          df['neutral_avg'].median(), len(df)]\r\n    variance_per_vid.append(df.iloc[:, 0:7].var())  # variance for each emotion in a video\r\n    # append these values to lists of lists\r\n    valence_per_vid.append(valence_values)\r\n\r\n# turning list of lists into a dataframe\r\nvideo_valence_df = pd.DataFrame(valence_per_vid, columns=[\"neg_avg_vid\", \"pos_avg_vid\", \"neutral_avg_vid\", \"vid_len\"])\r\n# valence for each emotion group and video length for each video\r\nvideo_variance_df = pd.DataFrame(variance_per_vid)  # variance for each emotion in each video\r\n\r\n# average variance of all emotions in any video (except neutral)\r\nall_vid_variance = video_variance_df[['happy', 'sad', 'angry', 'fear', 'disgust', 'surprise']].mean(axis=1)\r\nall_vid_variance_df = pd.DataFrame(all_vid_variance, columns = [\"variance_per_video\"])\r\n# average variance across all videos\r\ntotal_vid_variance = (all_vid_variance.mean())\r\nall_vid_variance_df[\"var_avg_all_vids\"] = total_vid_variance\r\n\r\n#merging the frames containing data on variance, valence and video length\r\n\r\nvideo_stats_df = pd.merge(all_vid_variance_df,video_valence_df,left_index=True, right_index=True)\r\n# TODO: fix this merge so that it does not merge on index. Need to add video_name as a column to both datasets and\r\n#  merge using that column. Sometimes index does weird things and we will have no way of knowing if it goes wrong.\r\nprint(video_stats_df)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- video_to_frame_DAISEE.py	(revision 76be7262bd0ab0fc07e78d4b6946a5387250e5a0)
++++ video_to_frame_DAISEE.py	(date 1625564549840)
+@@ -24,7 +24,7 @@
+      if filename.endswith('.jpg'):
+          print("Are you sure? The videos seem to have already been split.")
+          break   
+- else:
++    else:
+  # do stuff if a file .true doesn't exist.
+   for folder in os.listdir(PathIn):
+     folder = PathIn + "/" + folder
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.9 (FER)\" project-jdk-type=\"Python SDK\" />\r\n</project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 76be7262bd0ab0fc07e78d4b6946a5387250e5a0)
++++ .idea/misc.xml	(date 1625564550263)
+@@ -1,4 +1,4 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (FER)" project-jdk-type="Python SDK" />
+-</project>
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7 (FER)" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file
+Index: .idea/FER.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\" />\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.9 (FER)\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/FER.iml	(revision 76be7262bd0ab0fc07e78d4b6946a5387250e5a0)
++++ .idea/FER.iml	(date 1625564550259)
+@@ -1,8 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="PYTHON_MODULE" version="4">
+   <component name="NewModuleRootManager">
+-    <content url="file://$MODULE_DIR$" />
+-    <orderEntry type="jdk" jdkName="Python 3.9 (FER)" jdkType="Python SDK" />
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/venv" />
++    </content>
++    <orderEntry type="jdk" jdkName="Python 3.7 (FER)" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+-</module>
++</module>
+\ No newline at end of file
