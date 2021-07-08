@@ -6,22 +6,18 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 
-# TODO: make all of these into functions
 
 # ----------------------------------------------------------------------------#
-# SPLITTING VIDEOS INTO FRAMES#
+###SPLITTING VIDEOS INTO FRAMES FOR ANALYSIS###
 
+#Specify Paths#
+DATAFRAMESOUT="C:/Users/ccons/OneDrive/Desktop/DAiSEE_smol/Dataset/DataFrames/"
 # Specify the file you want the frames to be stored in
-PathOut = r'C:/Users/ccons/OneDrive/Desktop/DAiSEE_smol/Dataset/Frames/'
-# TODO: change the name of the pathout once we want to run the full thing
-
-# TODO: Add an ifloop that sees if the PathOut is populated and doesnt run the splitting if it is
-
+PATHOUT= r'C:/Users/ccons/OneDrive/Desktop/DAiSEE_smol/Dataset/Frames/'
 # Specify the file the videos are stored in
-PathIn = r'C:/Users/ccons/OneDrive/Desktop/DAiSEE_smol/Dataset/Videos/'
-# changed path to D: instead of C: to test things
-# TODO: change this to correct path when we want to process all the videos
+PATHIN= r'C:/Users/ccons/OneDrive/Desktop/DAiSEE_smol/Dataset/Videos/'
 
+#Specify Variables#
 # The frame rate that the film is recorded at -> Dependent on camera (usually 30)
 video_frame_rate = 30
 
@@ -31,10 +27,9 @@ required_frame_rate = 2
 # Making a blank array that will be populated with the full paths of all videos
 video_paths = []
 
-# Finding the name of all the video paths in the provided file structure
-#
-# for folder in os.listdir(PathIn):
-#     folder = PathIn + folder
+# Finding the name of all the video paths in the provided file
+# for folder in os.listdir(PATHIN):
+#     folder = PATHIN + folder
 #
 #     for vid in os.listdir(folder):
 #         vid = folder + "/" + vid
@@ -55,14 +50,13 @@ video_paths = []
 #         success, image = cap.read()
 #         print('read a new frame:',success)
 #         if frame_count %(video_frame_rate*required_frame_rate) == 0:
-#             cv2.imwrite(PathOut + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
+#             cv2.imwrite(PATHOUT + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
 #         frame_count += 1
 #
 # TODO: make this code not end with an error
 
 
 # # # ----------------------------------------------------------------------------#
-
 # PUTTING THE FRAMES THROUGH DEEPFACE AND OUTPUTTING THEM AS PD DATAFRAMES#
 # making a loop that takes the frames from one video at a time, puts them into an array and passes them through deepface
 video_counter = 1
@@ -70,12 +64,10 @@ array_counter = 1
 img_array = []
 dfs = []
 
-# takes all the photos that contain the number of 'video_counter' and puts them through deepface
-# TODO: doing 10 videos for now but fix this so that it does len(all videos)
-
-# for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter starting at 1?
+# TODO: for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter
+#  starting at 1?
 for i in range(2, 10, 1):
-    for filename in glob.glob(PathOut + 'video%d' % i + 'frame*.jpg'):
+    for filename in glob.glob(PATHOUT + 'video%d' % i + 'frame*.jpg'):
         print(filename)
         # Read in the relevant images
         img = cv2.imread(filename)
@@ -133,22 +125,25 @@ for df in dfs:
     df['pos_valence_avg_roll'] = df['pos_valence_avg'].rolling(window=three_percent_len).mean()
     df['neutral_avg_roll'] = df['neutral_avg'].rolling(window=three_percent_len).mean()
 
-    # TODO: if we want to add graphs of emotion vs. time this is the place to do it
+# Making a dataframe that compares all the videos to each other (no longer computing intra-video stats but inter-video)
 
-# Making a dataframe that compares all the videos to eachother (no longer computing intra-video stats but inter-video)
-
-valence_per_vid = []  # empty array to add inter-video analysis data
+# empty arrays to add inter-video analysis data
+valence_per_vid = []
 variance_per_vid = []
 total_vid_variance = []
+
 # list of median of positive emotions for each video
 for df in dfs:
-    # list of median of pos,neg and neutral emotions for each video (one value for each video), and length of video
-    for participant in df:
+    for i in df:
+        # list of median of pos,neg and neutral emotions for each video (one value for each video), and length of video
         valence_values = [(df['neg_valence_avg'].median()), df['pos_valence_avg'].median(),
-                          df['neutral_avg'].median(), len(df)]
-    variance_per_vid.append(df.iloc[:, 0:7].var())  # variance for each emotion in a video
-    # append these values to lists of lists
+                              df['neutral_avg'].median(), len(df)]
+    variance_per_vid.append(df.iloc[:, 0:7].var())  # variance for each emotion in a video; Appended to a list
+    print(variance_per_vid)
+        # append these values to lists of lists
     valence_per_vid.append(valence_values)
+
+
 
 ###VALENCE###
 # turning list of lists into a dataframe
@@ -159,23 +154,23 @@ total_vid_neg = (video_valence_df["neg_avg_vid"].mean())
 video_valence_df["total_vid_pos"] = total_vid_pos
 video_valence_df["total_vid_neg"] = total_vid_neg
 
-### VARIANCE ###
+###VARIANCE###
 # valence for each emotion group and video length for each video
 video_variance_df = pd.DataFrame(variance_per_vid)  # variance for each emotion in each video
-# average variance of all emotions in any video (except neutral)
+#average variance of all emotions in any video (except neutral)
 all_vid_variance = video_variance_df[['happy', 'sad', 'angry', 'fear', 'disgust', 'surprise']].mean(axis=1)
 all_vid_variance_df = pd.DataFrame(all_vid_variance, columns=["variance_per_video"])
 # average variance across all videos
 total_vid_variance = (all_vid_variance.mean())
 all_vid_variance_df["var_avg_all_vids"] = total_vid_variance
 
-### VARIANCE + VALENCE ###
+###VARIANCE + VALENCE###
 #merging the frames containing data on variance, valence and video length
 video_stats_df = pd.merge(all_vid_variance_df,video_valence_df,left_index=True, right_index=True)
 # TODO: fix this merge so that it does not merge on index. Need to add video_name as a column to both datasets and
 #  merge using that column. Sometimes index does weird things and we will have no way of knowing if it goes wrong.
 
-### "ENGAGEMENT" ###
+###"ENGAGEMENT"###
 #Getting difference between average negative score for all videos and average negative score for each video
 video_stats_df["pos_diff"] = video_stats_df["pos_avg_vid"] - video_stats_df["total_vid_pos"]
 video_stats_df["neg_diff"] = video_stats_df["neg_avg_vid"] - video_stats_df["total_vid_neg"]
@@ -191,4 +186,11 @@ video_stats_df["percent_diff_var"] = (video_stats_df["var_diff"]/video_stats_df[
 video_stats_df["percent_diff_pos"] = (video_stats_df["pos_diff"]/video_stats_df["pos_range"])*100
 video_stats_df["percent_diff_neg"] = (video_stats_df["neg_diff"]/video_stats_df["neg_range"])*100
 
-print(video_stats_df)
+#Exporting Frame to .pkl file#
+print("", dfs)
+print("video stats", video_stats_df)
+video_stats_df.to_pickle(DATAFRAMESOUT + "cross_video_stats_df.pkl")
+dfs.to_pickle(DATAFRAMESOUT + "emotion_dfs.pkl")
+
+#TODO: add engagement scores to compare with from the DAISEE dataset
+#TODO: make it so that the frame is somehow split by person
