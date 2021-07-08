@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30802251-b8e0-4181-a1ec-7ae766899d11" name="Default Changelist" comment="dataframe with engagement scores completed">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/video_to_frame_DAISEE.py" beforeDir="false" afterPath="$PROJECT_DIR$/video_to_frame_DAISEE.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,6 +35,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="MIXED" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
@@ -100,7 +107,7 @@
       <workItem from="1625587959412" duration="332000" />
       <workItem from="1625588346696" duration="2219000" />
       <workItem from="1625651746342" duration="4098000" />
-      <workItem from="1625730951006" duration="4040000" />
+      <workItem from="1625730951006" duration="4652000" />
     </task>
     <task id="LOCAL-00001" summary="dataframe with engagement scores completed">
       <created>1625655019909</created>
@@ -123,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625655787569</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="dataframe with engagement scores completed">
+      <created>1625735265474</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1625735265474</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,7 +154,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="tmp" />
+                        <option value="NoFunctionsYet" />
                       </list>
                     </value>
                   </entry>
