@@ -189,4 +189,4 @@ for i in video_paths:
 # dfs.to_pickle(DATAFRAMESOUT + "emotion_dfs.pkl")
 #
 # # TODO: add engagement scores to compare with from the DAISEE dataset
-# # TODO: make it so that the frame is somehow split by person
+# # TODO: make it so that the frames are labelled by person
