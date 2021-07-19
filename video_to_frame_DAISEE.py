@@ -5,9 +5,7 @@ import cv2
 import numpy as np
 import pandas as pd
 from deepface import DeepFace
-from dotenv import load_dotenv
 
-load_dotenv()
 
 def split_vid(required_frame_rate, video_frame_rate):
     # for our data use: split_v2f(2, 30)
@@ -179,3 +177,8 @@ def get_engagement(get_emotion):
 
     # TODO: add engagement scores to compare with from the DAISEE dataset
     # TODO: make it so that the frames are labelled by person
+
+
+if __name__ == "__main__":
+    dfs = get_emotion()
+    get_engagement(dfs)
