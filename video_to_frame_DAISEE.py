@@ -37,9 +37,9 @@ def split_vid(required_frame_rate, video_frame_rate):
                 print("frame written")
             frame_count += 1
 
+
 # takes the frames from one video at a time, puts them into an array and passes them through deepface
 def get_emotion():
-
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     PATHIN = os.getenv("PATH_IN")
     PATHOUT = os.getenv("PATH_OUT")
@@ -51,8 +51,6 @@ def get_emotion():
 
     for i in range(2, 10, 1):
         for filename in glob.glob(PATHOUT + 'video%d' % i + 'frame*.jpg'):
-            print(filename)
-
             # Read in the relevant images
             img = cv2.imread(filename)
             height, width, layers = img.shape
@@ -85,10 +83,11 @@ def get_emotion():
         df.set_index('vid%d' % i + 'instance', inplace=True)
         dfs.append(df)
     return dfs
+
+
 ###^All this works^###
 
-def get_engagement(get_emotion):
-
+def get_engagement(dfs):
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     # TREATING THE DATA IN THE DATAFRAMES TO GET "ENGAGEMENT"
     # TODO: currently applying to all frames; make it so that we can split frames belonging to different individuals
@@ -124,13 +123,13 @@ def get_engagement(get_emotion):
             valence_values = [(df['neg_valence_avg'].median()), df['pos_valence_avg'].median(),
                               df['neutral_avg'].median(), len(df)]
         variance_per_vid.append(df.iloc[:, 0:7].var())  # variance for each emotion in a video; Appended to a list
-        print(variance_per_vid)
         # append these values to lists of lists
         valence_per_vid.append(valence_values)
 
     ###VALENCE###
     # turning list of lists into a dataframe
-    video_valence_df = pd.DataFrame(valence_per_vid, columns=["neg_avg_vid", "pos_avg_vid", "neutral_avg_vid", "vid_len"])
+    video_valence_df = pd.DataFrame(valence_per_vid,
+                                    columns=["neg_avg_vid", "pos_avg_vid", "neutral_avg_vid", "vid_len"])
     # Average positive and negative valence across all videos
     total_vid_pos = (video_valence_df["pos_avg_vid"].mean())
     total_vid_neg = (video_valence_df["neg_avg_vid"].mean())
@@ -173,11 +172,12 @@ def get_engagement(get_emotion):
     print(dfs)
     print("video stats", video_stats_df)
     video_stats_df.to_pickle(DATAFRAMESOUT + 'cross_video_stats_df.pkl')
-    dfs.to_pickle(DATAFRAMESOUT + 'emotion_dfs.pkl')
-
+    pkl_count = 0
+    for df in dfs:
+        df.to_pickle(DATAFRAMESOUT +'df%d' %pkl_count + 'emotion_dfs.pkl')
+        pkl_count +=1
     # TODO: add engagement scores to compare with from the DAISEE dataset
     # TODO: make it so that the frames are labelled by person
-
 
 if __name__ == "__main__":
     dfs = get_emotion()
