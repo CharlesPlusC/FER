@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 
-#split each video into component frames at a determined frame rate
+# split each video into component frames at a determined frame rate
 def split_vid(required_frame_rate, video_frame_rate):
     # for our data use: split_vid(2, 30)
 
@@ -45,7 +45,7 @@ def get_emotion():
     dfs = []
     video_paths = []
 
-    #added the video counter here so it does not depend on the previous function
+    # added the video counter here so it does not depend on the previous function
     video_counter = 0  # how many videos there are
     for folder in os.listdir(PATHIN):
         folder = PATHIN + folder
@@ -91,7 +91,7 @@ def get_emotion():
         dfs.append(df)
     return dfs
 
-#get engagement from the deepface data
+# get engagement from the deepface data
 def get_engagement(dfs):
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     # TREATING THE DATA IN THE DATAFRAMES TO GET "ENGAGEMENT"
@@ -185,8 +185,6 @@ def get_engagement(dfs):
     # TODO: make it so that the frames are labelled by person
 
 if __name__ == "__main__":
-    video_counter = split_vid()
-    get_emotion()
-
+    video_counter = split_vid(2,30)
     dfs = get_emotion()
     get_engagement(dfs)
