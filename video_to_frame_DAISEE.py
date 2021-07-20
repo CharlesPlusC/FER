@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 
-
+#split each video into component frames at a determined frame rate
 def split_vid(required_frame_rate, video_frame_rate):
     # for our data use: split_vid(2, 30)
 
@@ -14,7 +14,6 @@ def split_vid(required_frame_rate, video_frame_rate):
     PATHOUT = os.getenv("PATH_OUT")
 
     video_paths = []  # list of videos to get frames from
-    video_counter = 0  # how many videos there are
 
     for folder in os.listdir(PATHIN):
         folder = PATHIN + folder
@@ -23,7 +22,6 @@ def split_vid(required_frame_rate, video_frame_rate):
             for video in os.listdir(vid):
                 video = vid + "/" + video
                 video_paths.append(video)
-                video_counter += 1
         vid_count = 0
     for i in video_paths:
         cap = cv2.VideoCapture(i)
@@ -37,15 +35,26 @@ def split_vid(required_frame_rate, video_frame_rate):
                 cv2.imwrite(PATHOUT + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
                 print("frame written")
             frame_count += 1
-    return video_counter  # how many videos there are
 
 # takes the frames from one video at a time, puts them into an array and passes them through deepface
-def get_emotion(video_counter):
+def get_emotion():
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     PATHIN = os.getenv("PATH_IN")
     PATHOUT = os.getenv("PATH_OUT")
     img_array = []
     dfs = []
+    video_paths = []
+
+    #added the video counter here so it does not depend on the previous function
+    video_counter = 0  # how many videos there are
+    for folder in os.listdir(PATHIN):
+        folder = PATHIN + folder
+        for vid in os.listdir(folder):
+            vid = folder + "/" + vid
+            for video in os.listdir(vid):
+                video = vid + "/" + video
+                video_paths.append(video)
+                video_counter += 1
 
     for i in range(1, video_counter, 1):
         for filename in glob.glob(PATHOUT + 'video%d' % i + 'frame*.jpg'):
@@ -82,8 +91,7 @@ def get_emotion(video_counter):
         dfs.append(df)
     return dfs
 
-###^All this works^###
-
+#get engagement from the deepface data
 def get_engagement(dfs):
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     # TREATING THE DATA IN THE DATAFRAMES TO GET "ENGAGEMENT"
@@ -178,7 +186,7 @@ def get_engagement(dfs):
 
 if __name__ == "__main__":
     video_counter = split_vid()
-    get_emotion(video_counter)
+    get_emotion()
 
     dfs = get_emotion()
     get_engagement(dfs)
