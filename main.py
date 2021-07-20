@@ -1,6 +1,6 @@
-from video_to_frame_DAISEE import get_emotion, get_engagement
+from video_to_frame_DAISEE import get_emotion, get_engagement, split_vid
 from dotenv import load_dotenv
 load_dotenv()
-
-dfs = get_emotion()
+video_counter = split_vid(2,30)
+dfs =get_emotion(video_counter)
 get_engagement(dfs)

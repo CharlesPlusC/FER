@@ -8,12 +8,13 @@ from deepface import DeepFace
 
 
 def split_vid(required_frame_rate, video_frame_rate):
-    # for our data use: split_v2f(2, 30)
+    # for our data use: split_vid(2, 30)
 
     PATHIN = os.getenv("PATH_IN")
     PATHOUT = os.getenv("PATH_OUT")
 
-    video_paths = []
+    video_paths = []  # list of videos to get frames from
+    video_counter = 0  # how many videos there are
 
     for folder in os.listdir(PATHIN):
         folder = PATHIN + folder
@@ -22,8 +23,8 @@ def split_vid(required_frame_rate, video_frame_rate):
             for video in os.listdir(vid):
                 video = vid + "/" + video
                 video_paths.append(video)
-
-        vid_count = 1
+                video_counter += 1
+        vid_count = 0
     for i in video_paths:
         cap = cv2.VideoCapture(i)
         vid_count += 1
@@ -36,20 +37,17 @@ def split_vid(required_frame_rate, video_frame_rate):
                 cv2.imwrite(PATHOUT + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
                 print("frame written")
             frame_count += 1
-
+    return video_counter  # how many videos there are
 
 # takes the frames from one video at a time, puts them into an array and passes them through deepface
-def get_emotion():
+def get_emotion(video_counter):
     DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
     PATHIN = os.getenv("PATH_IN")
     PATHOUT = os.getenv("PATH_OUT")
     img_array = []
     dfs = []
 
-    # TODO: for some reason starting this loop at 0 or 1 gives me empty frames? maybe to do with the video counter
-    #  starting at 1?
-
-    for i in range(2, 10, 1):
+    for i in range(1, video_counter, 1):
         for filename in glob.glob(PATHOUT + 'video%d' % i + 'frame*.jpg'):
             # Read in the relevant images
             img = cv2.imread(filename)
@@ -83,7 +81,6 @@ def get_emotion():
         df.set_index('vid%d' % i + 'instance', inplace=True)
         dfs.append(df)
     return dfs
-
 
 ###^All this works^###
 
@@ -174,11 +171,14 @@ def get_engagement(dfs):
     video_stats_df.to_pickle(DATAFRAMESOUT + 'cross_video_stats_df.pkl')
     pkl_count = 0
     for df in dfs:
-        df.to_pickle(DATAFRAMESOUT +'df%d' %pkl_count + 'emotion_dfs.pkl')
-        pkl_count +=1
+        df.to_pickle(DATAFRAMESOUT + 'df%d' % pkl_count + 'emotion_dfs.pkl')
+        pkl_count += 1
     # TODO: add engagement scores to compare with from the DAISEE dataset
     # TODO: make it so that the frames are labelled by person
 
 if __name__ == "__main__":
+    video_counter = split_vid()
+    get_emotion(video_counter)
+
     dfs = get_emotion()
     get_engagement(dfs)
