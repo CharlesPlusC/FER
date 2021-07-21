@@ -6,17 +6,16 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 
+
 # split each video into component frames at a determined frame rate
 def split_vid(required_frame_rate, video_frame_rate):
-    # for our data use: split_vid(2, 30)
-
     PATHIN = os.getenv("PATH_IN")
     PATHOUT = os.getenv("PATH_OUT")
 
     video_paths = []  # list of videos to get frames from
 
     for folder in os.listdir(PATHIN):
-        folder = PATHIN + folder
+        folder = PATHIN + folder #TODO: this line returns an error when run. But it works in main.py...
         for vid in os.listdir(folder):
             vid = folder + "/" + vid
             for video in os.listdir(vid):
@@ -35,6 +34,7 @@ def split_vid(required_frame_rate, video_frame_rate):
                 cv2.imwrite(PATHOUT + 'video%d' % vid_count + 'frame%d.jpg' % frame_count, image)
                 print("frame written")
             frame_count += 1
+
 
 # takes the frames from one video at a time, puts them into an array and passes them through deepface
 def get_emotion():
@@ -90,6 +90,7 @@ def get_emotion():
         df.set_index('vid%d' % i + 'instance', inplace=True)
         dfs.append(df)
     return dfs
+
 
 # get engagement from the deepface data
 def get_engagement(dfs):
@@ -184,7 +185,8 @@ def get_engagement(dfs):
     # TODO: add engagement scores to compare with from the DAISEE dataset
     # TODO: make it so that the frames are labelled by person
 
+
 if __name__ == "__main__":
-    video_counter = split_vid(2,30)
+    video_counter = split_vid(2, 30)
     dfs = get_emotion()
     get_engagement(dfs)

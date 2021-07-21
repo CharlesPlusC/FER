@@ -3,5 +3,5 @@ from dotenv import load_dotenv
 load_dotenv()
 
 video_counter = split_vid(2,30)
-dfs =get_emotion()
+dfs = get_emotion()
 get_engagement(dfs)
