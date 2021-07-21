@@ -1,4 +1,3 @@
-#
 import os
 import glob
 import cv2
@@ -35,7 +34,7 @@ from deepface import DeepFace
 
 # From DeepFace.py: faces are extracted from each frame (function called detector_backend; line 782). There is a
 # possibility to use different detectors (retinaface, mtcnn, opencv, dlib or ssd). The default one is opencv.
-# The detector_backend(0 function returns a "detected" and "aligned" face in numpy format.
+# The detector_backend(0 function returns a "detected" and "aligned" face in numpy format. All faces "forced" to 48*48
 
 # From OpencvWrapper.py: 1)crops the image to size of the face. 2) puts the eyes at the same level in each image
 
@@ -44,6 +43,9 @@ from deepface import DeepFace
 ###-----3) apply small squares (the size of the "features") in predetermined positions on all frames a select number of videos (maybe 5 to start)-----###
 # Not sure how to go about applying the squares to the images? probably possible to do it in the OpenCVWrapper code by
 # adding a step ?
+# after some digging seems like we could change the analyze() function in DeepFace.py (line 377 does emotion), to include
+# mechanism of adding a rectangle?
+
 
 #This is how you add a rectangle to an image:
 img_array = []
