@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 
+#TODO: Explain what the required file is
+#TODO: check for the required file structure. check if populated? Or we could just explain this but might make it easier to have a coded check.
+#TODO: is there any way of specifying the the paths of the files (like in .env) through the UI?
 
 # split each video into component frames at a determined frame rate
 def split_vid(required_frame_rate, video_frame_rate):
