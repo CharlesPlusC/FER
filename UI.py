@@ -34,7 +34,7 @@ def get_split_args():
     video_frame_rate = int(video_frame_rate_collect.get())
     print("Required Frame Rate: %s\nvideo_frame_rate: %s" % (required_frame_rate, video_frame_rate))
 
-collect_args_button = Button(root, text='get entries', command=get_split_args).grid(row=9, column=1, pady=4)
+collect_args_button = Button(root, text='Apply Frame Rate Settings', command=get_split_args).grid(row=9, column=1, pady=4)
 
 #Explain what the buttons do
 Do_All_Explainer= Label(root, text='Use the "Do All" button to split the videos, analyse them for emotion, and return a '
@@ -83,8 +83,8 @@ Split_Explainer.grid(row=1, column=0, columnspan=2)
 Emotion_Explainer.grid(row=2, column=0, columnspan=2)
 Engagement_Explainer.grid(row=3, column=0, columnspan=2)
 
-# Exit button
-button_quit = Button(root, text="Exit program", command=root.quit)
-button_quit.grid(row=8, column=0, columnspan=2)
+# # Exit button
+# button_quit = Button(root, text="Exit program", command=root.quit)
+# button_quit.grid(row=8, column=0, columnspan=2)
 
 root.mainloop()
