@@ -18,7 +18,7 @@ def split_vid(required_frame_rate, video_frame_rate):
     video_paths = []  # list of videos to get frames from
 
     for folder in os.listdir(PATHIN):
-        folder = PATHIN + "/" + folder #TODO: this line returns an error when run. But it works in main.py...
+        folder = PATHIN + "/" + folder
         for vid in os.listdir(folder):
             vid = folder + "/" + vid
             for video in os.listdir(vid):

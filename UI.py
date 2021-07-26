@@ -55,7 +55,7 @@ Engagement_Explainer = Label(root, text='Use the "Engagement" button to generate
 
 
 def Split_Emo_Eng():
-    split_vid(2, 30)
+    split_vid(1, 30)
     dfs = get_emotion()
     get_engagement(dfs)
 
