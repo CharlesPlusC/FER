@@ -125,7 +125,6 @@ def deprocess_image(x):
     x -= x.mean()
     x /= (x.std() + 1e-5)
     x *= 0.1
-
     # clip to [0, 1]
     x += 0.5
     x = np.clip(x, 0, 1)
