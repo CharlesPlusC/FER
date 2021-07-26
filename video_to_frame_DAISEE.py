@@ -16,14 +16,16 @@ def split_vid(required_frame_rate, video_frame_rate):
     PATHOUT = os.getenv("PATH_OUT")
 
     video_paths = []  # list of videos to get frames from
+    video_names = []  # list of only the video names
 
     for folder in os.listdir(PATHIN):
         folder = PATHIN + "/" + folder
         for vid in os.listdir(folder):
             vid = folder + "/" + vid
-            for video in os.listdir(vid):
-                video = vid + "/" + video
-                video_paths.append(video)
+            for video_name in os.listdir(vid):
+                video_names.append(video_name)
+                video_name = vid + "/" + video_name
+                video_paths.append(video_name)
         vid_count = 0
     for i in video_paths:
         cap = cv2.VideoCapture(i)
@@ -91,7 +93,13 @@ def get_emotion():
 
         df = pd.DataFrame(rows, columns=columns)
         df.set_index('vid%d' % i + 'instance', inplace=True)
+
+        df.index.frame = ''
         dfs.append(df)
+
+
+
+
     return dfs
 
 

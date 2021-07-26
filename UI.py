@@ -8,7 +8,7 @@ from tkinter import *
 
 root = Tk()
 root.title('Engagement analysis')
-root.iconbitmap('C:/Users/chazzers/Desktop/testicon.ico')
+# root.iconbitmap('C:/Users/chazzers/Desktop/testicon.ico')
 
 # Collects two integers to pass to Emo function(video_frame_rate, required_frame_rate).
 # make the text for the entry
