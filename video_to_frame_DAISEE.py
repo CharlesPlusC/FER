@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 import pandas as pd
 from deepface import DeepFace
+from dotenv import load_dotenv
+
+load_dotenv()
 
 #TODO: Explain what the required file is
 #TODO: check for the required file structure. check if populated? Or we could just explain this but might make it easier to have a coded check.
@@ -27,6 +30,7 @@ def split_vid(required_frame_rate, video_frame_rate):
                 video_name = vid + "/" + video_name
                 video_paths.append(video_name)
         vid_count = 0
+
     for i in video_paths:
         cap = cv2.VideoCapture(i)
         vid_count += 1
@@ -52,12 +56,12 @@ def get_emotion():
 
     # added the video counter here so it does not depend on the previous function
     video_counter = 0  # how many videos there are
-    for folder in os.listdir(PATHIN):
-        folder = PATHIN + folder
-        for vid in os.listdir(folder):
-            vid = folder + "/" + vid
-            for video in os.listdir(vid):
-                video = vid + "/" + video
+    for i in os.listdir(PATHIN):
+        person_folder = PATHIN + "/" + i
+        for vid_folder in os.listdir(person_folder):
+            vid_folder = person_folder + "/" + vid_folder
+            for video in os.listdir(vid_folder):
+                video = vid_folder + "/" + video
                 video_paths.append(video)
                 video_counter += 1
 
@@ -96,12 +100,7 @@ def get_emotion():
 
         df.index.frame = ''
         dfs.append(df)
-
-
-
-
     return dfs
-
 
 # get engagement from the deepface data
 def get_engagement(dfs):
@@ -196,8 +195,7 @@ def get_engagement(dfs):
     # TODO: add engagement scores to compare with from the DAISEE dataset
     # TODO: make it so that the frames are labelled by person
 
-
-if __name__ == "__main__":
-    video_counter = split_vid(2, 30)
-    dfs = get_emotion()
-    get_engagement(dfs)
+# if __name__ == "__main__":
+#     video_counter = split_vid(2, 30)
+#     dfs = get_emotion()
+#     get_engagement(dfs)
