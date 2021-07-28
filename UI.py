@@ -31,7 +31,7 @@ required_frame_rate_collect_label.grid(row=7, column=0)
 # collect the arguments
 def get_split_args():
     global required_frame_rate, video_frame_rate
-    required_frame_rate = int(required_frame_rate_collect.get())
+    required_frame_rate = float(required_frame_rate_collect.get())
     video_frame_rate = int(video_frame_rate_collect.get())
     print("Required Frame Rate: %s\nvideo_frame_rate: %s" % (required_frame_rate, video_frame_rate))
 

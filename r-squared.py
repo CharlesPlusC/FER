@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 rng = np.random.default_rng()
 
+#1) Plot variance of all videos vs all labels of all videos
 df = pd.read_pickle("C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/DataFrames/cross_video_stats_df.pkl")
 labels = pd.read_csv("C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/Labels/AllLabels.csv")
 short_eng = labels.Engagement.iloc[0:113]
