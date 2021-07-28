@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from deepface import DeepFace
 from dotenv import load_dotenv
-
 load_dotenv()
 
 #TODO: Explain what the required file is
@@ -53,16 +52,18 @@ def get_emotion():
     img_array = []
     dfs = []
     video_paths = []
+    video_names = []
 
     # added the video counter here so it does not depend on the previous function
     video_counter = 0  # how many videos there are
     for i in os.listdir(PATHIN):
-        person_folder = PATHIN + "/" + i
+        person_folder = PATHIN + i
         for vid_folder in os.listdir(person_folder):
             vid_folder = person_folder + "/" + vid_folder
             for video in os.listdir(vid_folder):
+                video_names.append(video) #saving just the name of the video into an array
                 video = vid_folder + "/" + video
-                video_paths.append(video)
+                video_paths.append(video) #saving the whole path of the video into another array
                 video_counter += 1
 
     for i in range(1, video_counter, 1):
@@ -75,7 +76,7 @@ def get_emotion():
 
         # Pass them through deepface
         face_FER = DeepFace.analyze(img_path=img_array, actions=['emotion'], enforce_detection=False)
-        img_array = []
+        img_array = [] #reset image array to be blank
         data = face_FER
 
         # Turning arrays into pandas dataframes and labelling emotions
@@ -85,7 +86,7 @@ def get_emotion():
             for emotion in value['emotion'].keys():
                 emotions.add(emotion)
         rows = []
-        columns = ['vid%d' % i + 'instance'] + list(emotions)
+        columns = ['instance'] + list(emotions)
 
         for key, value in data.items():
             rows.append([0] * len(columns))  # Start creating a new row with zeros
@@ -96,11 +97,10 @@ def get_emotion():
                 rows[-1][columns.index(emotion)] = emotion_value  # place the emotion in the correct index
 
         df = pd.DataFrame(rows, columns=columns)
-        df.set_index('vid%d' % i + 'instance', inplace=True)
-
-        df.index.frame = ''
-        dfs.append(df)
+        df.set_index('instance', inplace=True)
+        dfs.append(df) #TODO: need to index this with 'video names'
     return dfs
+
 
 # get engagement from the deepface data
 def get_engagement(dfs):
