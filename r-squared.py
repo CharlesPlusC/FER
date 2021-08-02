@@ -5,19 +5,28 @@ import cv2
 import numpy as np
 import pandas as pd
 from deepface import DeepFace
-
+import statistics
 from dotenv import load_dotenv
 
 load_dotenv()
 
 import matplotlib.pyplot as plt
 from scipy import stats
+
 #
 # rng = np.random.default_rng()
 # #
 # #1) Plot variance of all videos vs all labels of all videos
 # df = pd.read_pickle("C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/DataFrames/cross_video_stats_df.pkl")
 # labels = pd.read_csv("C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/Labels/AllLabels.csv")
+#
+# # Engage_labels = labels['Engagement']
+# # plt.hist(Engage_labels)
+# # plt.ylabel('Count')
+# # plt.xlabel('Engagement Score(/4)');
+# # plt.show()
+#
+#
 # vid_1_eng = labels.Engagement.iloc[0:113]
 # vid_6_eng = labels.Engagement.iloc[282:360]
 # vid_7_eng = labels.Engagement.iloc[361:502]
@@ -31,26 +40,26 @@ from scipy import stats
 #
 # engs = pd.concat([vid_1_eng ,vid_6_eng ,vid_7_eng ,vid_8_eng ,vid_10_eng,vid_11_eng,vid_12_eng,vid_13_eng,vid_14_eng,vid_15_eng])
 # all_engs = engs.reset_index()
-# all_vids = df.iloc[0:672]
+# all_vids = df.iloc[0:849]
 # #
 # # # # ### Shared x-axis graph###
-# data1 = all_vids['percent_diff_var']
+# data1 = all_vids['pos_avg_vid'].iloc[588:671]
 # # # #data1 = df['percent_diff_neg']
 # # # #data1 = df['percent_diff_var']
-# data2 = all_engs
-# # # data2 = labels["Boredom"]
-# # # # data2 = labels["Confusion"]
-# #
+# data2 = all_engs.iloc[588:671]
+# # data2 = labels["Boredom"]
+# # # data2 = labels["Confusion"]
+#
 # fig, ax1 = plt.subplots()
 # #
 # color1 = 'tab:red'
 # ax1.set_xlabel('video',fontsize= 12)
-# ax1.set_ylabel('% Difference in variance', color=color1,fontsize= 12)
+# ax1.set_ylabel('variance_all_emotions', color=color1,fontsize= 12)
 # ax1.plot( data1, color=color1)
 # ax1.tick_params(axis='y', labelcolor=color1)
 # plt.yticks(fontsize= 12)
 # plt.xticks(fontsize= 12)
-# plt.ylim(-20,100)
+# plt.ylim(0,100)
 #
 # ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 #
@@ -65,7 +74,7 @@ from scipy import stats
 # plt.show()
 
 
-## linear regression graph###
+# ## linear regression graph###
 # x = data1
 # y = data2["Engagement"]
 #
@@ -78,17 +87,17 @@ from scipy import stats
 # plt.show()
 
 # ###################### NOT MAKING
+
+DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
+PATHIN = os.getenv("PATH_IN")
+PATHOUT = os.getenv("PATH_OUT")
+img_array = []
+dfs = []
+video_paths = []
+video_names = []
+person_folder_names = []
 #
-# DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
-# PATHIN = os.getenv("PATH_IN")
-# PATHOUT = os.getenv("PATH_OUT")
-# img_array = []
-# dfs = []
-# video_paths = []
-# video_names = []
-# person_folder_names = []
-# #
-# # added the video counter here so it does not depend on the previous function
+# added the video counter here so it does not depend on the previous function
 # video_counter = 0  # how many videos there are
 # for i in os.listdir(PATHIN):
 #     person_folder = PATHIN + i
@@ -99,8 +108,7 @@ from scipy import stats
 #             video = vid_folder + "/" + video
 #             video_paths.append(video)  # saving the whole path of the video into another array
 #             person_folder_names.append(i)  # add an instance of 'folder name' for each video
-#             video_counter += 1
-# for i in range(0, video_counter, 1):
+#             video_counter+= 1
 #     for filename in glob.glob(PATHOUT + 'video%d' % i + 'frame*.jpg'):
 #         # Read in the relevant images
 #         img = cv2.imread(filename)
@@ -128,7 +136,7 @@ from scipy import stats
 #     df = pd.DataFrame(rows, columns=columns)
 #     df.set_index('instance', inplace=True)
 #     dfs.append(df)  # TODO: need to index this with 'video names'
-# #
+# # # #
 # index_arrays = (person_folder_names,video_names)
 # dfs_index = pd.MultiIndex.from_arrays(index_arrays, names=["person", "video"])
 # dfs_frame = pd.DataFrame(dfs,index = dfs_index, columns=['video_emotion']) #dataframe indexed by folder name and video name (two levels)
@@ -139,8 +147,9 @@ from scipy import stats
 DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
 
 dfs_frame = pd.read_pickle(DATAFRAMESOUT + 'dfs_frame.pkl')
-dfs_frame = dfs_frame.iloc[1:,:] #drop first column cos empty
-for df in dfs_frame['video_emotion']: # average of negative and positive valence emotions, and neutral
+dfs_frame = dfs_frame.iloc[1:, :]  # drop first column cos empty?
+# grouping the emotions in each video
+for df in dfs_frame['video_emotion']:  # average of negative and positive valence emotions, and neutral PER FRAME
     df['neg_valence_avg'] = np.mean(df[['fear', 'disgust', 'angry', 'sad']], axis=1)
     df['pos_valence_avg'] = np.mean(df[['happy', 'surprise']], axis=1)
     df['neutral_avg'] = np.mean(df[['neutral']], axis=1)
@@ -150,70 +159,62 @@ for df in dfs_frame['video_emotion']: # average of negative and positive valence
         three_percent_len = int(len(df) * 0.02)
     else:
         three_percent_len = 1
-         # Taking a rolling average of these (length of the rolling average = 2% the length of the dataframe(or 2 frames
-         # whichever is biggest))
+        # Taking a rolling average of these (length of the rolling average = 2% the length of the dataframe(or 2 frames
+        # whichever is biggest))
     df['neg_valence_avg_roll'] = df['neg_valence_avg'].rolling(window=three_percent_len).mean()
     df['pos_valence_avg_roll'] = df['pos_valence_avg'].rolling(window=three_percent_len).mean()
     df['neutral_avg_roll'] = df['neutral_avg'].rolling(window=three_percent_len).mean()
 
-for df in dfs_frame.groupby("person")['video_emotion']:
-    print(df)
+    #making a new column with the average per video
+    df['neutral_person_avg'] = df['neutral_avg'].median()
+    df["variance_per_vid"] = (df.iloc[:, 0:7].var()).mean()
+    df["total_vid_pos"] = df['pos_valence_avg'].median()
+    df["total_vid_neg"] = df['neg_valence_avg'].mean()
 
-    valence_per_vid = []
-    variance_per_vid = []
-    total_vid_variance = []
-    for emotion_df in dfs_frame['dfs']:
-        valence_values = [(emotion_df['neg_valence_avg'].median()), emotion_df['pos_valence_avg'].median(),
-                          emotion_df['neutral_avg'].median(), len(emotion_df)]
-        # append these values to lists of lists
-        valence_per_vid.append(valence_values)
-        variance_per_vid.append()  # variance for each emotion in a video; Appended to a list
-    # ###VALENCE###
-    # # Compute valence PER VIDEO and append to frame of frames
-    if dfs_frame['person_folder_names'] == i:
-        dfs_frame["variance_per_vid"] = (emotion_df.iloc[:, 0:7]).var()
-        dfs_frame["total_vid_pos"] = emotion_df['pos_valence_avg'].median()
-        dfs_frame["total_vid_neg"] = emotion_df['neg_valence_avg'].mean()
-    else: i += 1
-    video_valence_df= pd.DataFrame(valence_per_vid,
-                                    columns=["neg_avg_vid", "pos_avg_vid", "neutral_avg_vid", "vid_len"])
-    # Average positive and negative valence across all videos
-    total_vid_pos = (video_valence_df["pos_avg_vid"].mean())
-    total_vid_neg = (video_valence_df["neg_avg_vid"].mean())
-    video_valence_df["total_vid_pos"] = total_vid_pos
-    video_valence_df["total_vid_neg"] = total_vid_neg
-    ###VARIANCE###
-    # valence for each emotion group and video length for each video
-    video_variance_df = pd.DataFrame(variance_per_vid)  # variance for each emotion in each video
-    # average variance of all emotions in any video (except neutral)
-    all_vid_variance = video_variance_df[['happy', 'sad', 'angry', 'fear', 'disgust', 'surprise']].mean(axis=1)
-    all_vid_variance_df = pd.DataFrame(all_vid_variance, columns=["variance_per_video"])
-    # average variance across all videos
-    total_vid_variance = (all_vid_variance.mean())
-    all_vid_variance_df["var_avg_all_vids"] = total_vid_variance
-    ###VARIANCE + VALENCE###
-    # merging the frames containing data on variance, valence and video length
-    video_stats_df = pd.merge(all_vid_variance_df, video_valence_df, left_index=True, right_index=True)
-    # TODO: fix this merge so that it does not merge on index. Need to add video_name as a column to both datasets and
-    #  merge using that column. Sometimes index does weird things and we will have no way of knowing if it goes wrong.
-    ###"ENGAGEMENT"###
-    # Getting difference between average negative score for all videos and average negative score for each video
-    video_stats_df["pos_diff"] = video_stats_df["pos_avg_vid"] - video_stats_df["total_vid_pos"]
-    video_stats_df["neg_diff"] = video_stats_df["neg_avg_vid"] - video_stats_df["total_vid_neg"]
-    video_stats_df["var_diff"] = video_stats_df["variance_per_video"] - video_stats_df["var_avg_all_vids"]
-    # Getting the differences between the highest and lowest values for emotions and variance
-    video_stats_df["variance_range"] = video_stats_df["var_diff"].max() - video_stats_df["var_diff"].min()
-    video_stats_df["pos_range"] = video_stats_df["pos_diff"].max() - video_stats_df["pos_diff"].min()
-    video_stats_df["neg_range"] = video_stats_df["neg_diff"].max() - video_stats_df["neg_diff"].min()
-    # Using the above ranges to calculate the percentage difference
-    video_stats_df["percent_diff_var"] = (video_stats_df["var_diff"] / video_stats_df["variance_range"]) * 100
-    video_stats_df["percent_diff_pos"] = (video_stats_df["pos_diff"] / video_stats_df["pos_range"]) * 100
-    video_stats_df["percent_diff_neg"] = (video_stats_df["neg_diff"] / video_stats_df["neg_range"]) * 100
-    # Exporting Frame to .pkl file#
-    # print(dfs_frame)
-    # print("video stats", video_stats_df)
-    # video_stats_df.to_pickle(DATAFRAMESOUT + 'cross_video_stats_df.pkl')
-    # pkl_count = 0
-    # for df in dfs:
-    #     df.to_pickle(DATAFRAMESOUT + 'df%d' % pkl_count + 'emotion_dfs.pkl')
-    #     pkl_count += 1
+# # # now calculating emotions 'per person'
+for vid_name, data in dfs_frame.groupby(level=0):
+    positive_array = []
+    negative_array = []
+    variance_array = []
+    for i in range(0, len(data.index), 1):
+
+        positive_array.append(data['video_emotion'][i]["total_vid_pos"].mean())
+        pos_mean = statistics.mean(positive_array)
+
+        negative_array.append(data['video_emotion'][i]["total_vid_neg"].mean())
+        neg_mean = statistics.mean(positive_array)
+
+        variance_array.append(data['video_emotion'][i]["variance_per_vid"].mean())
+        var_mean = statistics.mean(positive_array)
+
+        data["pos_mean"] = pos_mean
+        data["neg_mean"] = neg_mean
+        data["var_mean"] = var_mean
+
+print(data)
+# # ###VARIANCE + VALENCE###
+# # # merging the frames containing data on variance, valence and video length
+# # video_stats_df = pd.merge(all_vid_variance_df, video_valence_df, left_index=True, right_index=True)
+# # # TODO: fix this merge so that it does not merge on index. Need to add video_name as a column to both datasets and
+# # #  merge using that column. Sometimes index does weird things and we will have no way of knowing if it goes wrong.
+# # ###"ENGAGEMENT"###
+# # # Getting difference between average negative score for all videos and average negative score for each video
+# # video_stats_df["pos_diff"] = video_stats_df["pos_avg_vid"] - video_stats_df["total_vid_pos"]
+# # video_stats_df["neg_diff"] = video_stats_df["neg_avg_vid"] - video_stats_df["total_vid_neg"]
+# # video_stats_df["var_diff"] = video_stats_df["variance_per_video"] - video_stats_df["var_avg_all_vids"]
+# # # Getting the differences between the highest and lowest values for emotions and variance
+# # video_stats_df["variance_range"] = video_stats_df["var_diff"].max() - video_stats_df["var_diff"].min()
+# # video_stats_df["pos_range"] = video_stats_df["pos_diff"].max() - video_stats_df["pos_diff"].min()
+# # video_stats_df["neg_range"] = video_stats_df["neg_diff"].max() - video_stats_df["neg_diff"].min()
+# # # Using the above ranges to calculate the percentage difference
+# # video_stats_df["percent_diff_var"] = (video_stats_df["var_diff"] / video_stats_df["variance_range"]) * 100
+# # video_stats_df["percent_diff_pos"] = (video_stats_df["pos_diff"] / video_stats_df["pos_range"]) * 100
+# # video_stats_df["percent_diff_neg"] = (video_stats_df["neg_diff"] / video_stats_df["neg_range"]) * 100
+# # # Exporting Frame to .pkl file#
+# # # print(dfs_frame)
+# # # print("video stats", video_stats_df)
+# # # video_stats_df.to_pickle(DATAFRAMESOUT + 'cross_video_stats_df.pkl')
+# # # pkl_count = 0
+# # # for df in dfs:
+# # #     df.to_pickle(DATAFRAMESOUT + 'df%d' % pkl_count + 'emotion_dfs.pkl')
+# # #     pkl_count += 1
