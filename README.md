@@ -6,3 +6,5 @@
 *Jupyter notebooks used for the purposes of illustrating early thinking
 
 Required file structure to use main.py/ video_to_frame_DAISEE.py:![file structure requried](https://imgur.com/UPwuxeQ) 
+
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/nFocCBl" data-context="false" ><a href="//imgur.com/a/nFocCBl"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
