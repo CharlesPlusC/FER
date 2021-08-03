@@ -88,14 +88,14 @@ from scipy import stats
 
 # ###################### NOT MAKING
 
-DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
-PATHIN = os.getenv("PATH_IN")
-PATHOUT = os.getenv("PATH_OUT")
-img_array = []
-dfs = []
-video_paths = []
-video_names = []
-person_folder_names = []
+# DATAFRAMESOUT = os.getenv("DATA_FRAMES_OUT")
+# PATHIN = os.getenv("PATH_IN")
+# PATHOUT = os.getenv("PATH_OUT")
+# img_array = []
+# dfs = []
+# video_paths = []
+# video_names = []
+# person_folder_names = []
 #
 # added the video counter here so it does not depend on the previous function
 # video_counter = 0  # how many videos there are
@@ -165,7 +165,7 @@ for df in dfs_frame['video_emotion']:  # average of negative and positive valenc
     df['pos_valence_avg_roll'] = df['pos_valence_avg'].rolling(window=three_percent_len).mean()
     df['neutral_avg_roll'] = df['neutral_avg'].rolling(window=three_percent_len).mean()
 
-    #making a new column with the average per video
+    # making a new column with the average per video
     df['neutral_person_avg'] = df['neutral_avg'].median()
     df["variance_per_vid"] = (df.iloc[:, 0:7].var()).mean()
     df["total_vid_pos"] = df['pos_valence_avg'].median()
@@ -191,14 +191,13 @@ for person_name, data in dfs_frame.groupby(level=0):
         variance_array.append(data['video_emotion'][i]["variance_per_vid"].mean())
         var_mean = statistics.mean(variance_array)
 
-        #Mean of all the pos,neg,var values in one folder, appended as a column to the frame of frames
+        # Mean of all the pos,neg,var values in one folder, appended as a column to the frame of frames
         data["pos_mean"] = pos_mean
         data["neg_mean"] = neg_mean
         data["var_mean"] = var_mean
 
-        #subtract the single values(pos_mean,neg_mean, var_mean) from the video emotions
+        # subtract the single values(pos_mean,neg_mean, var_mean) from the video emotions
     for i in range(0, len(data['video_emotion'].index), 1):
-
         pos_diff = (data["pos_mean"][i]) - (data['video_emotion'][i]["total_vid_pos"].mean())
         pos_diff_array.append(pos_diff)
 
@@ -222,13 +221,5 @@ for person_name, data in dfs_frame.groupby(level=0):
     data["percent_diff_pos"] = (data["pos_diff"] / data["pos_range"]) * 100
     data["percent_diff_neg"] = (data["neg_diff"] / data["neg_range"]) * 100
 
-
-
-# # # Exporting Frame to .pkl file#
-# # # print(dfs_frame)
-# # # print("video stats", video_stats_df)
-# # # video_stats_df.to_pickle(DATAFRAMESOUT + 'cross_video_stats_df.pkl')
-# # # pkl_count = 0
-# # # for df in dfs:
-# # #     df.to_pickle(DATAFRAMESOUT + 'df%d' % pkl_count + 'emotion_dfs.pkl')
-# # #     pkl_count += 1
+    print("engagement calcs for %s:" % person_name, data)
+    data.to_pickle(DATAFRAMESOUT + '%s' % person_name + 'engagement_calcs.pkl')
