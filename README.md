@@ -5,4 +5,6 @@
 
 *Jupyter notebooks used for the purposes of illustrating early thinking
 
-Required file structure to use main.py/ video_to_frame_DAISEE.py:![file structure](FER_file_structure.jpeg)
+Required file structure to use main.py/ video_to_frame_DAISEE.py:
+
+(https://user-images.githubusercontent.com/66725307/127992724-2c24bc24-f5fe-4088-83a9-f7c3c4e583cc.jpeg)
