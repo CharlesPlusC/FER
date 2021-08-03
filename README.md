@@ -1,4 +1,4 @@
-# Tracking Engagement through the use of facial affect #
+# Tracking engagement through the use of facial affect #
 - Initially attempted to make a Facial Emotion Recognition CNN based on FER2013 Kaggle Dataset. Attached model achieves around 67% accuracy. Can be found in *CNN_v2.ipynb*
 
 - Subsequently decided to make use of DeepFace and get an 'engagement score' for each video in the aim of informing health and safety site inductions so as to make them more engaging and to ultimately improve site safety outcomes. 
