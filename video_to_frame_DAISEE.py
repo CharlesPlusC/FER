@@ -1,4 +1,3 @@
-# importing dependencies
 import os
 import glob
 import cv2
