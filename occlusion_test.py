@@ -21,7 +21,7 @@ load_dotenv()
 PATHOUT = os.getenv("PATH_OUT")
 PATHIN = os.getenv("PATH_IN")
 #object = pd.read_pickle(r'C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\DataFrames\df0emotion_dfs.pkl')
-REALPATH = r"C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\Next_Dataset"
+REALPATH = os.getenv("VALIDATION")
 
 def get_datagen(dataset):
     return ImageDataGenerator().flow_from_directory(
