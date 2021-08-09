@@ -20,34 +20,37 @@ load_dotenv()
 
 PATHOUT = os.getenv("PATH_OUT")
 PATHIN = os.getenv("PATH_IN")
-# object = pd.read_pickle(r'C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\DataFrames\df0emotion_dfs.pkl')
+#object = pd.read_pickle(r'C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\DataFrames\df0emotion_dfs.pkl')
+REALPATH = r"C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\Next_Dataset"
 
-# def get_datagen(dataset):
-#     return ImageDataGenerator().flow_from_directory(
-#               dataset,
-#               target_size=(48,48),
-#               color_mode='grayscale',
-#               shuffle = True,
-#               class_mode='categorical',
-#               batch_size=32)
+def get_datagen(dataset):
+    return ImageDataGenerator().flow_from_directory(
+              dataset,
+              target_size=(48,48),
+              color_mode='grayscale',
+              shuffle = True,
+              class_mode='categorical',
+              batch_size=32)
 
-video_paths = []
-colour_to_grayscale = []
 
-for folder in os.listdir(PATHOUT):
-    folder_2 = PATHOUT + folder
-    video_paths.append(folder_2)
+# FER_data = pd.read_csv(r"C:\Users\lizzy\OneDrive - University College London\Desktop\FER2013.csv")
+# video_paths = []
+# colour_to_grayscale = []
 
-for path in video_paths:
-    img_path = r'C:\Users\ccons\OneDrive\Desktop\DAiSEE_smol\Dataset\Frames\video32frame180.jpg'
-    original_img = cv2.imread(img_path)
-
-    detector_backend = 'opencv'
-    enforce_detection = False
-    img, region = functions.preprocess_face(img = img_path, target_size = (48, 48), grayscale = True, enforce_detection = enforce_detection, detector_backend = detector_backend, return_region = True)
-
-    img.resize(48,48)
-    colour_to_grayscale.append(img)
+# for folder in os.listdir(PATHOUT):
+#     folder_2 = PATHOUT + folder
+#     video_paths.append(folder_2)
+#
+# for path in video_paths:
+#     img_path = r'C:\Users\ccons\OneDrive\Desktop\DAiSEE_smol\Dataset\Frames\video32frame180.jpg'
+#     original_img = cv2.imread(img_path)
+#
+#     detector_backend = 'opencv'
+#     enforce_detection = False
+#     img, region = functions.preprocess_face(img = img_path, target_size = (48, 48), grayscale = True, enforce_detection = enforce_detection, detector_backend = detector_backend, return_region = True)
+#
+#     img.resize(48,48)
+#     colour_to_grayscale.append(img)
 
 # for i in video_paths:
 #     originalImage = cv2.imread(i)
@@ -56,7 +59,7 @@ for path in video_paths:
 #     colour_to_grayscale.append(grey_array)
 
 
-# X_test_gen = get_datagen(PATHOUT)
+X_test_gen = get_datagen(REALPATH)
 
 # print(len(X_test_gen.filepaths))
 
