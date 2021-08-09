@@ -1,6 +1,7 @@
 # %% Importing requirements
 import numpy as np
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 import os
 import cv2
@@ -63,54 +64,57 @@ X_test_gen = get_datagen(REALPATH)
 
 # print(len(X_test_gen.filepaths))
 
-# X_test = np.zeros((len(X_test_gen.filepaths), 48, 48, 1))
-# Y_test = np.zeros((len(X_test_gen.filepaths), 7))
-# for i in range(0,len(X_test_gen.filepaths)):
-#   x = io.imread(X_test_gen.filepaths[i], as_gray=True) #loading the frames from the file location
-#   X_test[i,:] = transform.resize(x, (48,48,1))
-#   Y_test[i,X_test_gen.classes[i]] = 1
+X_test = np.zeros((len(X_test_gen.filepaths), 48, 48, 1))
+Y_test = np.zeros((len(X_test_gen.filepaths), 7))
+for i in range(0,len(X_test_gen.filepaths)):
+  x = io.imread(X_test_gen.filepaths[i], as_gray=True) #loading the frames from the file location
+  X_test[i,:] = transform.resize(x, (48,48,1))
+  Y_test[i,X_test_gen.classes[i]] = 1
+
+#TODO Added model here in Stanford version
 #
-# # Think it's making an array of the shape 40x40x1, full of 0.5s, then another two of smaller sizes.
-# def iter_occlusion(image, size=8):
-#     occlusion = np.full((size * 5, size * 5, 1), [0.5], np.float32)
-#     occlusion_center = np.full((size, size, 1), [0.5], np.float32)
-#     occlusion_padding = size * 2
+# Think it's making an array of the shape 40x40x1, full of 0.5s, then another two of smaller sizes.
+def iter_occlusion(image, size=8):
+    occlusion = np.full((size * 5, size * 5, 1), [0.5], np.float32)
+    occlusion_center = np.full((size, size, 1), [0.5], np.float32)
+    occlusion_padding = size * 2
 #
-# # Padding the array/tensor adds 0s to convert to a shape that's better for the convolution, without losing any pixel info
-#     print('padding...')
-#     image_padded = np.pad(image, ( \
-#                         (occlusion_padding, occlusion_padding), (occlusion_padding, occlusion_padding), (0, 0) \
-#                         ), 'constant', constant_values = 0.0)
-#
-#     for y in range(occlusion_padding, image.shape[0] + occlusion_padding, size):
-#         for x in range(occlusion_padding, image.shape[1] + occlusion_padding, size):
-#             tmp = image_padded.copy()
-#
-#             tmp[y - occlusion_padding:y + occlusion_center.shape[0] + occlusion_padding, \
-#                 x - occlusion_padding:x + occlusion_center.shape[1] + occlusion_padding] \
-#                 = occlusion
-#
-#             tmp[y:y + occlusion_center.shape[0], x:x + occlusion_center.shape[1]] = occlusion_center
-#
-#             yield x - occlusion_padding, y - occlusion_padding, \
-#                   tmp[occlusion_padding:tmp.shape[0] - occlusion_padding, occlusion_padding:tmp.shape[1] - occlusion_padding]
-#
+# Padding the array/tensor adds 0s to convert to a shape that's better for the convolution, without losing any pixel info
+    print('padding...')
+    image_padded = np.pad(image, ( \
+                        (occlusion_padding, occlusion_padding), (occlusion_padding, occlusion_padding), (0, 0) \
+                        ), 'constant', constant_values = 0.0)
+
+    for y in range(occlusion_padding, image.shape[0] + occlusion_padding, size):
+        for x in range(occlusion_padding, image.shape[1] + occlusion_padding, size):
+            tmp = image_padded.copy()
+
+            tmp[y - occlusion_padding:y + occlusion_center.shape[0] + occlusion_padding, \
+                x - occlusion_padding:x + occlusion_center.shape[1] + occlusion_padding] \
+                = occlusion
+
+            tmp[y:y + occlusion_center.shape[0], x:x + occlusion_center.shape[1]] = occlusion_center
+
+            yield x - occlusion_padding, y - occlusion_padding, \
+                  tmp[occlusion_padding:tmp.shape[0] - occlusion_padding, occlusion_padding:tmp.shape[1] - occlusion_padding]
+
 # #######
 #
-# i = 126
-# data = X_test[i]
-# correct_class = np.argmax(Y_test[i])
-#
-# # input tensor for model.predict
-# inp = data.reshape(1,48,48,1)
-# # image data for matplotlib's imshow
-# img = data.reshape(48,48)
-# # occlusion
-# img_size = img.shape[0]
-# occlusion_size = 4
-# _ = plt.imshow(img,cmap='gray')
-#
-# #######
+i = 1
+data = X_test[i]
+correct_class = np.argmax(Y_test[i])
+
+# input tensor for model.predict
+inp = data.reshape(1,48,48,1)
+# image data for matplotlib's imshow
+img = data.reshape(48,48)
+# occlusion
+img_size = img.shape[0]
+occlusion_size = 4
+_ = plt.imshow(img,cmap='gray')
+
+# ## ADDING THE MODEL
+model = load_model('C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/emotionmodel.h5')
 #
 # print('occluding...')
 #
