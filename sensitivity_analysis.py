@@ -6,13 +6,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from deepface import DeepFace
 import warnings
+from deepface.detectors import FaceDetector
+from deepface.commons import functions, realtime, distance as dst
+from matplotlib.patches import Rectangle
 
-warnings.filterwarnings("ignore")
+# warnings.filterwarnings("ignore")
 from tensorflow.keras import backend as K
 import os
 
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+# # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import time
 from os import path
@@ -22,14 +25,14 @@ from tqdm import tqdm
 import pickle
 from deepface import DeepFace
 from deepface.commons import functions
-import imageio
+# import imageio
 from matplotlib.patches import Rectangle
 
-from deepface.basemodels import VGGFace, OpenFace, Facenet, FbDeepFace, DeepID, DlibWrapper, ArcFace, Boosting
-from deepface.extendedmodels import Age, Gender, Race, Emotion
-from deepface.commons import functions, realtime, distance as dst
-
-import tensorflow as tf
+# from deepface.basemodels import VGGFace, OpenFace, Facenet, FbDeepFace, DeepID, DlibWrapper, ArcFace, Boosting
+# from deepface.extendedmodels import Age, Gender, Race, Emotion
+# from deepface.commons import functions, realtime, distance as dst
+#
+# import tensorflow as tf
 
 # tf_version = int(tf.__version__.split(".")[0])
 # if tf_version == 2:
@@ -144,12 +147,17 @@ frame = "C:/Users/chazzers/Desktop/DAiSEE_smol/DataSet/Frames/video418frame60.jp
 # plt.show()
 
 ###Face pre-processing visualization###
-#preprocessing returns a 48*48 array: is it the whole image or just the face region
-# facedata = functions.detect_face(cv2.imread(frame))
-# print(facedata) #this returns a 123*123 array which contains only the face
-#
-# into_model_img  = cv2.resize(facedata[0],(48,48))
-# plt.imshow(cv2.cvtColor(into_model_img, cv2.COLOR_R))
-# plt.show()
-# data = functions.preprocess_face(facedata[0], target_size=(48,48), return_region=True)
-# print(data)
+
+img_path = r'C:\Users\ccons\OneDrive\Desktop\DAiSEE_smol\Dataset\Frames\video32frame180.jpg'
+original_img = cv2.imread(img_path)
+
+detector_backend = 'opencv'
+enforce_detection = False
+img, region = functions.preprocess_face(img = img_path, target_size = (48, 48), grayscale = True, enforce_detection = enforce_detection, detector_backend = detector_backend, return_region = True)
+
+img.resize(48,48)
+
+    ###Un-comment to plot an image and the face region detected###
+    # plt.imshow(cv2.imread(img_path))
+    # plt.gca().add_patch(Rectangle((309,290), 144, 144, lw=2, edgecolor ='green', facecolor='none'))
+    # plt.show()

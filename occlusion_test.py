@@ -11,6 +11,8 @@ from matplotlib.colors import BoundaryNorm
 from matplotlib.colorbar import ColorbarBase
 from matplotlib import cm
 from dotenv import load_dotenv
+
+from deepface.commons import functions, realtime, distance as dst
 import pandas as pd
 load_dotenv()
 # %%
@@ -36,11 +38,22 @@ for folder in os.listdir(PATHOUT):
     folder_2 = PATHOUT + folder
     video_paths.append(folder_2)
 
-for i in video_paths:
-    originalImage = cv2.imread(i)
-    greyimage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
-    grey_array = np.asarray(greyimage)
-    colour_to_grayscale.append(grey_array)
+for path in video_paths:
+    img_path = r'C:\Users\ccons\OneDrive\Desktop\DAiSEE_smol\Dataset\Frames\video32frame180.jpg'
+    original_img = cv2.imread(img_path)
+
+    detector_backend = 'opencv'
+    enforce_detection = False
+    img, region = functions.preprocess_face(img = img_path, target_size = (48, 48), grayscale = True, enforce_detection = enforce_detection, detector_backend = detector_backend, return_region = True)
+
+    img.resize(48,48)
+    colour_to_grayscale.append(img)
+
+# for i in video_paths:
+#     originalImage = cv2.imread(i)
+#     greyimage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+#     grey_array = np.asarray(greyimage)
+#     colour_to_grayscale.append(grey_array)
 
 
 # X_test_gen = get_datagen(PATHOUT)
