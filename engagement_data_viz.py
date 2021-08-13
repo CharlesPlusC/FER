@@ -47,14 +47,28 @@ def scatter_individual(yax="pos_diff", xax="Engagement", fit="lin_reg"):
         xarray.append(x)
         yarray.append(y)
 
+        rsquareds = [] #empty array to collect r-squared values
         if fit == "lin_reg":
             res = stats.linregress(xarray, yarray)
             slope = [((res.slope * i)+res.intercept) for i in xarray]
             print(f"R-squared: {res.rvalue ** 2:.3f}")
-            plt.plot(xarray, yarray, 'o', label='original data')
-            plt.plot(xarray[0], slope[0], 'r', label='fitted line')
+            rsquareds.append(res.rvalue ** 2)
+            plt.plot(xarray,yarray, 'o')
+            plt.plot(xarray[0],slope[0], 'r', label='linear fit')
+
+            plt.ylabel(yax)
+            plt.xlabel(xax)
+            plt.legend()
             plt.show()
+
+
         elif fit == "poly_fit":
-            plt.plot(xarray, yarray, 'o', label='original data')
-            plt.plot(np.polyfit(xarray[0], yarray[0], deg = 3))
+            plt.plot(xarray, yarray, 'o')
+            plt.plot(np.polyfit(xarray[0], yarray[0], deg = 3), label='poly fit line')
+
+            plt.ylabel(yax)
+            plt.xlabel(xax)
+            plt.legend()
             plt.show()
+
+    print("mean r-squared value:", statistics.mean(rsquareds))
