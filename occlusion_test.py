@@ -25,9 +25,7 @@ load_dotenv()
 PATHOUT = os.getenv("PATH_OUT")
 PATHIN = os.getenv("PATH_IN")
 #object = pd.read_pickle(r'C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\DataFrames\df0emotion_dfs.pkl')
-COLOUR_VAL = os.getenv("COLOUR_VAL")
-GRAY_VAL = os.getenv("GRAY_VAL")
-MODEL = os.getenv("MODEL")
+REALPATH = os.getenv("VALIDATION")
 
 def get_datagen(dataset):
     return ImageDataGenerator().flow_from_directory(
@@ -37,31 +35,31 @@ def get_datagen(dataset):
               shuffle = True,
               class_mode='categorical',
               batch_size=32)
-#
-img_paths_gray = []
-for gray_path in os.listdir(GRAY_VAL):
-    image_folder = GRAY_VAL + '/' + gray_path + '/'
-    img_paths_gray.append(image_folder)
 
-img_paths_col = []
-for path in os.listdir(COLOUR_VAL):
-    img_folder = COLOUR_VAL + '/' + path
+img_paths = []
+for path in os.listdir(REALPATH):
+    img_folder = REALPATH + path
     for face in os.listdir(img_folder):
-        img_path_col = img_folder + '/' + face
-        img_paths_col.append(img_path_col)
-for i, j in zip(img_paths_col, img_paths_gray):
+        img_path = img_folder + '/' + face
+        img_paths.append(img_path)
+for i in img_paths:
     img_path = i
-    name_split = img_path.rsplit('/', 1)[-1]
-    out_path = j + name_split + '.tiff'
+    out_path = i + '.tiff'
     detector_backend = 'opencv'
     enforce_detection = False
     img, region = functions.preprocess_face(img=img_path, target_size=(48, 48), grayscale=True,enforce_detection=enforce_detection, detector_backend=detector_backend, return_region=True)
     img.resize(48,48)
     cv2.imwrite(out_path,img)
     print("image done", img)
-# #
-# #
-# X_test_gen = get_datagen(COLOUR_VAL)
+
+# for i in video_paths:
+#     originalImage = cv2.imread(image)
+#     grey_image = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+#     grey_array = np.asarray(grey_image)
+#     colour_to_grayscale.append(grey_array)
+
+
+# X_test_gen = get_datagen(REALPATH)
 #
 # X_test = np.zeros((len(X_test_gen.filepaths), 48, 48, 1))
 # Y_test = np.zeros((len(X_test_gen.filepaths), 7))
@@ -97,25 +95,26 @@ for i, j in zip(img_paths_col, img_paths_gray):
 #             yield x - occlusion_padding, y - occlusion_padding, \
 #                   tmp[occlusion_padding:tmp.shape[0] - occlusion_padding, occlusion_padding:tmp.shape[1] - occlusion_padding]
 #
-# #######
+# # #######
+# #
+# i = 1
+# data = X_test[i]
+# correct_class = np.argmax(Y_test[i])
 #
-# for i in range(0,len(X_test_gen.filepaths),1):
-#     data = X_test[i]
-#     correct_class = np.argmax(Y_test[i])
+# # input tensor for model.predict
+# inp = data.reshape(1,48,48,1)
+# # image data for matplotlib's imshow
+# img = data.reshape(48,48)
+# # occlusion
+# img_size = img.shape[0]
+# occlusion_size = 4
+# _ = plt.imshow(img,cmap='gray')
+# cv2.imwrite(r'C:\Users\lizzy\OneDrive\Documents\Macbook Documents\COLLEGE\UCL\3rd year\Summer Project\DAiSEE_smol\Dataset\Next_Dataset\0 angry\actual_greyscale', img)
 #
-#     # input tensor for model.predict
-#     inp = data.reshape(1,48,48,1)
-#     # image data for matplotlib's imshow
-#     img = data.reshape(48,48)
-#     # occlusion
-#     img_size = img.shape[0]
-#     occlusion_size = 4
-#     # _ = plt.imshow(img,cmap='gray')
-#
-#     # ## ADDING THE MODEL
-#     model = load_model(MODEL)
-#     #
-#     print('occluding...')
+# # ## ADDING THE MODEL
+# model = load_model('C:/Users/lizzy/OneDrive/Documents/Macbook Documents/COLLEGE/UCL/3rd year/Summer Project/DAiSEE_smol/emotionmodel.h5')
+# #
+# print('occluding...')
 #
 #     heatmap = np.zeros((img_size, img_size), np.float32)
 #     class_pixels = np.zeros((img_size, img_size), np.int16)
@@ -185,4 +184,4 @@ for i, j in zip(img_paths_col, img_paths_gray):
 #     plt.pcolormesh(heatmap, cmap=plt.cm.jet, alpha=0.50)
 #     plt.colorbar().solids.set(alpha=1)
 #
-#     plt.show()
+# plt.show()
