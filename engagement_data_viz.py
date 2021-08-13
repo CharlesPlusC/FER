@@ -14,7 +14,6 @@ load_dotenv()
 
 
 def scatter_individual(yax="pos_diff", xax="Engagement", fit="lin_reg"):
-
     #### Plots graphs for each individual in the dataset ###
     #   Takes as arguments:
     #                 xax, and yax -> strings with the name of the data you want to plot
@@ -47,24 +46,22 @@ def scatter_individual(yax="pos_diff", xax="Engagement", fit="lin_reg"):
         xarray.append(x)
         yarray.append(y)
 
-        rsquareds = [] #empty array to collect r-squared values
+        rsquareds = []  # empty array to collect r-squared values
         if fit == "lin_reg":
             res = stats.linregress(xarray, yarray)
-            slope = [((res.slope * i)+res.intercept) for i in xarray]
+            slope = [((res.slope * i) + res.intercept) for i in xarray]
             print(f"R-squared: {res.rvalue ** 2:.3f}")
             rsquareds.append(res.rvalue ** 2)
-            plt.plot(xarray,yarray, 'o')
-            plt.plot(xarray[0],slope[0], 'r', label='linear fit')
+            plt.plot(xarray, yarray, 'o')
+            plt.plot(xarray[0], slope[0], 'r', label='linear fit')
 
             plt.ylabel(yax)
             plt.xlabel(xax)
             plt.legend()
             plt.show()
-
-
         elif fit == "poly_fit":
             plt.plot(xarray, yarray, 'o')
-            plt.plot(np.polyfit(xarray[0], yarray[0], deg = 3), label='poly fit line')
+            plt.plot(np.polyfit(xarray[0], yarray[0], deg=3), label='poly fit line')
 
             plt.ylabel(yax)
             plt.xlabel(xax)
