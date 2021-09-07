@@ -17,7 +17,4 @@ The main functions are as follows:
 - **get_emotion()**: applies DeepFace (Serengil, 2020) to split frames and outputs dataframes
 - **get_engagement()**: processing of the data from get_emotion() to return 'engagement' of a participant relative to themselves in any one clip
 
-These functions can be accessed either via the *main.py*, *UI.py*, or *video_to_frame_DAISEE.py*
-
-###### Note: ######
-The more clips there are for a given participant the better an engagement score will be generated
+*UI.py* contains a basic user interface.
