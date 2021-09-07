@@ -5,7 +5,7 @@
 
 - Jupyter notebooks used as early rough drafts of the program (video preocessing, dataframe extraction from deepface, engagement calculation and comparison with observations)
 
-### Engagement calculator program ###
+### Engagement calculator ###
 #### Disclaimer: ####
 The following code provides a first attempt at calculating 'engagament' within a given video/set of videos. There are many issues with this method including the fact that facial emotion (a.k.a affect) is only representative of **external state** and so can only be used to infer external markers of engagement. This method makes no claims of being able to identify any more than this.
 
