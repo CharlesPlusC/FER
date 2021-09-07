@@ -5,19 +5,16 @@
 
 - Jupyter notebooks used as early rough drafts of the program (video preocessing, dataframe extraction from deepface, engagement calculation and comparison with observations)
 
-### Engagement calculator program ###
+### Engagement calculator ###
 #### Disclaimer: ####
 The following code provides a first attempt at calculating 'engagament' within a given video/set of videos. There are many issues with this method including the fact that facial emotion (a.k.a affect) is only representative of **external state** and so can only be used to infer external markers of engagement. This method makes no claims of being able to identify any more than this.
 
 #### Using the code ####
-Required file structure to use main.py/ video_to_frame_DAISEE.py: ![file structure](https://user-images.githubusercontent.com/66725307/127992724-2c24bc24-f5fe-4088-83a9-f7c3c4e583cc.jpeg)
+Required file structure: ![file structure](https://user-images.githubusercontent.com/66725307/127992724-2c24bc24-f5fe-4088-83a9-f7c3c4e583cc.jpeg)
 
 The main functions are as follows:
 - **split_vid()**: Simply splits the video into its frames. Takes as arugments the frame rate of the camera used and the number of frames per second required.
-- **get_emotion()**: applies DeepFace (Serengil, 2020) to split frames and outputs dataframes
-- **get_engagement()**: processing of the data from get_emotion() to return 'engagement' of a participant relative to themselves in any one clip
+- **get_emotion()**: applies DeepFace (Serengil, 2020) to split frames and outputs emotion dataframes (probability of each emotion being present in each frame).
+- **get_engagement()**: processing of the data from get_emotion() to return 'engagement' of a participant relative to themselves in any one clip. This is based on emotion variance, normalized positive and negative emotion.
 
-These functions can be accessed either via the *main.py*, *UI.py*, or *video_to_frame_DAISEE.py*
-
-###### Note: ######
-The more clips there are for a given participant the better an engagement score will be generated
+*UI.py* contains a basic user interface.
